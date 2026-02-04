@@ -1173,9 +1173,23 @@
 
         // Glitch
         function triggerGlitch() {
-            document.body.classList.add('glitching'); document.getElementById('glitch-overlay').style.display='block';
-            setTimeout(() => { document.body.classList.remove('glitching'); document.getElementById('glitch-overlay').style.display='none'; document.getElementById('bsod').style.display='block'; }, 2000);
-            setTimeout(() => { document.getElementById('bsod').style.display='none'; openWindow('secret-window'); }, 600000);
+            // 1. Bắt đầu hiệu ứng nhiễu (Glitch)
+            document.body.classList.add('glitching'); 
+            document.getElementById('glitch-overlay').style.display = 'block';
+            
+            // 2. Sau 2 giây -> Hiện màn hình xanh (BSOD)
+            setTimeout(() => { 
+                document.body.classList.remove('glitching'); 
+                document.getElementById('glitch-overlay').style.display = 'none'; 
+                document.getElementById('bsod').style.display = 'block'; 
+            }, 2000);
+
+            // 3. Sau 5 GIÂY (5000ms) -> Tự thoát màn hình xanh và mở lại Confession
+            setTimeout(() => { 
+                document.getElementById('bsod').style.display = 'none'; 
+                // Reset lại hình nền nếu đang ở chế độ khác
+                document.getElementById('desktop').style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png')";
+            }, 7000); // 2000ms glitch + 5000ms BSOD = 7000ms tổng
         }
 
         // Confession
@@ -1186,9 +1200,28 @@
             else { setTimeout(() => { document.getElementById('hidden-content').classList.remove('hidden', 'opacity-0'); }, 500); }
         }
         function acceptLove() {
+            // 1. Đóng cửa sổ
             closeWindow('secret-window');
+            
+            // 2. Đổi màu nền cho lãng mạn
             document.getElementById('desktop').style.background = 'linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)';
-            alert("Hệ thống ghi nhận: LOVE_GRANTED!");
+            
+            // 3. Kích hoạt mưa tim (Đây là đoạn bị thiếu)
+            setInterval(() => {
+                const h = document.createElement('div'); 
+                h.className = 'heart'; 
+                h.innerHTML = '❤️';
+                h.style.left = Math.random() * 100 + 'vw'; 
+                h.style.fontSize = (Math.random() * 20 + 10) + 'px'; 
+                h.style.animationDuration = (Math.random() * 3 + 2) + 's'; 
+                document.getElementById('desktop').appendChild(h); 
+                
+                // Tự xóa tim sau 5s để đỡ lag máy
+                setTimeout(() => h.remove(), 5000);
+            }, 100); // 100ms rơi 1 quả
+
+            // 4. Thông báo chốt đơn
+            alert("Hệ thống ghi nhận: LOVE_GRANTED! (Yêu vcl)");
         }
 
         // Common
@@ -1245,6 +1278,7 @@
     </script>
 </body>
 </html>
+
 
 
 
