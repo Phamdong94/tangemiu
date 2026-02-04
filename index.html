@@ -336,7 +336,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                 <div class="window-title">Love Calculator</div>
                 <div class="win-btn-close" onclick="closeWindow('calc-window')"><i class="fas fa-times"></i></div>
             </div>
-            <div class="calc-display" id="calc-res"></div>
+            <div class="calc-display" id="calc-res">0</div>
             <div class="calc-grid">
                 <button class="calc-btn text-red-600" onclick="clearCalc()">C</button>
                 <button class="calc-btn" onclick="addCalc('/')">/</button>
@@ -449,7 +449,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                                 <b>Gia đình:</b> Con trai cả của Bố Định (1978) & Mẹ Hương (1984), anh trai của Tiến (2006).<br>
                                 <b>Địa chỉ:</b> Số 12 ngách 8 ngõ 74 phố Đông Thiên, Vĩnh Hưng, Hoàng Mai, HN.<br>
                                 <b>Sở thích:</b> Màu xanh dương và yêu em.<br>
-                                <b>Tình trạng:</b> Đang chờ Trang.
+                                <b>Tình trạng:</b> Đang chờ người yêu accept lời tỏ tình.
                             </div>
                         </div>
 
@@ -516,13 +516,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                                 <!-- Main Player Container -->
                                 <div class="flex-1">
                                     <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative group" id="video-container">
-                                        <!-- Fake Player (Click to Load) -->
-                                        <div class="fake-player" onclick="loadRealVideo()">
-                                            <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
-                                            <div class="play-btn-overlay">
-                                                <div class="play-triangle"></div>
-                                            </div>
-                                        </div>
+                                        <!-- Will be filled by JS -->
                                     </div>
                                     
                                     <div class="mt-4">
@@ -708,59 +702,100 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             showView('view-search');
             document.getElementById('chrome-url').innerText = "https://www.google.com";
             document.getElementById('google-input').value = "";
-            // Reset player to image when going home
-            document.getElementById('video-container').innerHTML = `
+            document.getElementById('video-container').innerHTML = ""; // Clear video when going home
+        }
+
+        function doGoogleSearch() {
+            const val = document.getElementById('google-input').value.trim();
+            if(!val) return;
+            
+            // Tính năng mới: Dán link Youtube vào search box -> Tự động phát
+            if (val.includes('youtube.com/watch?v=') || val.includes('youtu.be/')) {
+                let videoId = '';
+                if (val.includes('v=')) {
+                    videoId = val.split('v=')[1].split('&')[0];
+                } else if (val.includes('youtu.be/')) {
+                    videoId = val.split('youtu.be/')[1].split('?')[0];
+                }
+
+                if (videoId) {
+                    openYouTube(videoId);
+                    return;
+                }
+            }
+
+            // Normal Search
+            showView('view-results');
+            document.getElementById('result-bar-text').innerText = val;
+            document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
+        }
+
+        // LOAD VIDEO FIX LỖI 153 (DÙNG IFRAME CHUẨN)
+        function loadRealVideo() {
+            const container = document.getElementById('video-container');
+            // Dùng iframe chuẩn với autoplay=1
+            container.innerHTML = `
+                <iframe width="100%" height="100%" 
+                    src="https://www.youtube.com/embed/vVhKA9Av6vA?autoplay=1" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin" 
+                    allowfullscreen>
+                </iframe>`;
+        }
+
+        function openYouTube(videoId) { 
+            showView('view-youtube');
+            // Default if undefined
+            if (!videoId) videoId = 'vVhKA9Av6vA';
+            
+            if (videoId.includes('?')) videoId = videoId.split('?')[0];
+
+            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=" + videoId;
+            
+            const container = document.getElementById('video-container');
+
+            if(videoId === 'vVhKA9Av6vA') {
+                document.getElementById('yt-video-title').innerText = "'bao tiền một mớ bình yên?' - 14 Casper & Bon Nghiêm (Official) (Track 09 - Album 'SỐ KHÔNG')";
+                // Show fake player for main video
+                container.innerHTML = `
                 <div class="fake-player" onclick="loadRealVideo()">
                     <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
                     <div class="play-btn-overlay">
                         <div class="play-triangle"></div>
                     </div>
                 </div>`;
-        }
-
-        function doGoogleSearch() {
-            const val = document.getElementById('google-input').value.trim();
-            if(!val) return;
-            showView('view-results');
-            document.getElementById('result-bar-text').innerText = val;
-            document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
-        }
-
-        // LOAD VIDEO FIX LỖI 153 (DÙNG DẠNG PLAYLIST MIX)
-        function loadRealVideo() {
-            const container = document.getElementById('video-container');
-            // Trick: Dùng link có tham số list=RD... để lách luật chặn nhúng đơn lẻ
-            container.innerHTML = `
+            } else {
+                document.getElementById('yt-video-title').innerText = "Video YouTube";
+                // Autoplay for others
+                container.innerHTML = `
                 <iframe width="100%" height="100%" 
-                    src="https://www.youtube.com/embed/vVhKA9Av6vA?list=RDvVhKA9Av6vA&autoplay=1" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
                     title="YouTube video player" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
                 </iframe>`;
+            }
         }
 
-        function openYouTube() { 
-            showView('view-youtube');
-            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=vVhKA9Av6vA";
-        }
-
-        // --- WINAMP MUSIC LOGIC (PLAYLIST VERSION with Drive Support) ---
+        // --- WINAMP MUSIC LOGIC (PLAYLIST VERSION) ---
         
         // =========================================================================
-        // ĐỒNG ƠI! DÁN LINK NHẠC VÀO ĐÂY (HỖ TRỢ LINK GOOGLE DRIVE):
+        // HƯỚNG DẪN TẠO LINK MP3 BẤT TỬ:
+        // 1. Upload file nhạc .mp3 lên cùng thư mục với file index.html trên GitHub.
+        // 2. Điền tên file vào phần 'src' bên dưới (Ví dụ: "./bai_hat_1.mp3").
         // =========================================================================
         const playlist = [
             {
-                title: "1. Demo Chill (Link mẫu)",
+                title: "1. Demo Chill",
                 src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"
             },
             {
-                title: "2. Secret",
-                src: "https://drive.google.com/file/d/1ElGoGLAUQKorIA354XBMQTezXC9MdeuW/view?usp=drive_link"
-            },
-            // Ví dụ link Google Drive (Nhớ mở quyền 'Anyone with the link'):
-            // { title: "3. Tên Bài Hát", src: "https://drive.google.com/file/d/1A2B3C.../view?usp=sharing" }
+                title: "2. SECRET", 
+                src: "./nhac.mp3" // <-- Sửa tên file nhạc mày đã up lên GitHub vào đây
+            }
         ];
         // =========================================================================
 
@@ -792,10 +827,12 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
 
         function handleAudioError() {
             stopVisualizer();
-            // Chỉ hiện alert nếu đang cố gắng phát (tránh lỗi khi mới load trang)
+            // Tắt alert lỗi để đỡ phiền nếu link chưa chuẩn
+            console.log("Lỗi phát nhạc: Kiểm tra xem đã upload file nhạc lên GitHub chưa.");
+            
+            // Tự động chuyển bài nếu lỗi (để tìm bài nào chạy được)
             if (isPlaying) {
-                alert("Lỗi phát nhạc! Có thể do:\n1. Link Google Drive chưa mở quyền 'Public' (Anyone with the link).\n2. Link MP3 bị chặn.\n\nĐang chuyển sang bài tiếp theo...");
-                nextSong(); // Auto skip lỗi
+                 setTimeout(() => nextSong(), 1000);
             }
             isPlaying = false;
         }
