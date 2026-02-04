@@ -1112,14 +1112,14 @@
         }
 
         // FIX LỖI 153: Dùng link Embed cơ bản + no-referrer để tránh bị chặn
+
         function loadRealVideo() {
              document.getElementById('video-container').innerHTML = `
              <iframe width="100%" height="100%" 
-                src="https://www.youtube.com/embed/vVhKA9Av6vA&autoplay=1" 
+                src="https://www.youtube-nocookie.com/embed/vVhKA9Av6vA?rel=0&modestbranding=1" 
                 title="YouTube video player" 
                 frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="no-referrer"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                 allowfullscreen>
              </iframe>`;
         }
@@ -1127,4 +1127,5 @@
     </script>
 </body>
 </html>
+
 
