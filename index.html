@@ -977,6 +977,20 @@
 
         // --- 6. NIGHT MODE ---
 // --- 6. NIGHT MODE (ĐÃ NÂNG CẤP CỰC QUANG) ---
+        function toggleNightMode() {
+            const desktop = document.getElementById('desktop');
+            const canvas = document.getElementById('stars-canvas');
+            
+            if(canvas.style.display === 'block') {
+                canvas.style.display = 'none';
+                desktop.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png')";
+            } else {
+                desktop.style.backgroundImage = 'none';
+                desktop.style.backgroundColor = '#000';
+                canvas.style.display = 'block';
+                initStars();
+            }
+        }
         function initStars() {
             const canvas = document.getElementById('stars-canvas');
             const ctx = canvas.getContext('2d');
@@ -1197,6 +1211,7 @@
     </script>
 </body>
 </html>
+
 
 
 
