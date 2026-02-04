@@ -977,6 +977,7 @@
 
         // --- 6. NIGHT MODE ---
 // --- 6. NIGHT MODE (ĐÃ NÂNG CẤP CỰC QUANG) ---
+        // --- 6. NIGHT MODE (BẦU TRỜI SAO & CỰC QUANG VĨNH CỬU) ---
         function toggleNightMode() {
             const desktop = document.getElementById('desktop');
             const canvas = document.getElementById('stars-canvas');
@@ -986,100 +987,133 @@
                 desktop.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png')";
             } else {
                 desktop.style.backgroundImage = 'none';
-                desktop.style.backgroundColor = '#000';
+                desktop.style.backgroundColor = '#001'; // Nền đen xanh thẫm
                 canvas.style.display = 'block';
                 initStars();
             }
         }
+
         function initStars() {
             const canvas = document.getElementById('stars-canvas');
             const ctx = canvas.getContext('2d');
+            
+            // Set full màn hình
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
+            // Xử lý resize màn hình
+            window.onresize = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            };
+            
             const stars = [];
-            // Tăng số lượng sao lên 300 cho dày
+            // Tạo 300 ngôi sao
             for(let i=0; i<300; i++) {
                 stars.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    r: Math.random() * 2, // Bán kính
-                    alpha: Math.random(), // Độ mờ
-                    d: (Math.random() - 0.5) * 0.02 // Tốc độ nhấp nháy
+                    r: Math.random() * 2 + 0.5, // Kích thước ngẫu nhiên
+                    alpha: Math.random(), // Độ sáng
+                    d: (Math.random() - 0.5) * 0.02, // Tốc độ nhấp nháy
+                    speed: Math.random() * 0.5 + 0.1 // Tốc độ rơi nhẹ
                 });
             }
 
             let t = 0; // Biến thời gian cho cực quang
 
             function animateStars() {
+                // Nếu tắt night mode thì dừng vòng lặp
                 if(canvas.style.display === 'none') return;
                 
-                // Xóa màn hình
-                ctx.clearRect(0,0,canvas.width, canvas.height);
+                // Xóa màn hình cũ
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                // --- VẼ CỰC QUANG (AURORA) ---
-                t += 0.005;
-                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                gradient.addColorStop(0, 'rgba(0,0,0,0)');
-                gradient.addColorStop(0.3, 'rgba(0, 255, 128, 0.05)'); // Xanh lục mờ
-                gradient.addColorStop(0.6, 'rgba(148, 0, 211, 0.05)'); // Tím mờ
-                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                // --- 1. VẼ CỰC QUANG (AURORA) ---
+                t += 0.01;
+                // Tạo Gradient màu cực quang (Xanh lục - Tím - Xanh dương)
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, 'rgba(0,0,20,0)');
+                gradient.addColorStop(0.2, 'rgba(0, 255, 127, 0.08)'); // Xanh lục neon mờ
+                gradient.addColorStop(0.5, 'rgba(138, 43, 226, 0.08)'); // Tím mờ
+                gradient.addColorStop(0.8, 'rgba(0, 191, 255, 0.08)'); // Xanh dương mờ
+                gradient.addColorStop(1, 'rgba(0,0,20,0)');
                 
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
-                ctx.moveTo(0, canvas.height/2);
+                ctx.moveTo(0, canvas.height);
                 
-                // Tạo sóng sin chuyển động
-                for(let x=0; x<=canvas.width; x+=10) {
-                    let y = canvas.height/2 + Math.sin(x * 0.005 + t) * 50 + Math.sin(x * 0.01 - t) * 30;
+                // Vẽ sóng sin uốn lượn
+                for(let x = 0; x <= canvas.width; x += 20) {
+                    // Công thức sóng chồng chập để tạo độ tự nhiên
+                    let y = canvas.height/2 
+                          + Math.sin(x * 0.005 + t) * 60 
+                          + Math.sin(x * 0.01 - t * 0.5) * 40;
                     ctx.lineTo(x, y);
                 }
                 ctx.lineTo(canvas.width, canvas.height);
                 ctx.lineTo(0, canvas.height);
                 ctx.fill();
                 
-                // --- VẼ SAO LẤP LÁNH ---
+                // --- 2. VẼ SAO LẤP LÁNH & RƠI ---
                 ctx.fillStyle = "white";
                 stars.forEach(s => {
+                    // Hiệu ứng nhấp nháy
                     s.alpha += s.d;
-                    if(s.alpha <= 0.2 || s.alpha >= 1) s.d = -s.d; // Đảo chiều nhấp nháy
+                    if(s.alpha <= 0.2 || s.alpha >= 1) s.d = -s.d;
                     
-                    ctx.globalAlpha = s.alpha;
-                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+                    // Hiệu ứng rơi nhẹ
+                    s.y -= s.speed; // Bay lên nhẹ (hoặc s.y += s.speed để rơi xuống)
+                    if (s.y < 0) s.y = canvas.height; // Reset vị trí khi bay hết màn hình
+                    
+                    // Vẽ sao
+                    ctx.globalAlpha = Math.max(0, Math.min(1, s.alpha)); // Khóa alpha từ 0-1
+                    ctx.beginPath(); 
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); 
+                    ctx.fill();
                 });
-                ctx.globalAlpha = 1;
+                ctx.globalAlpha = 1; // Reset alpha chung
                 
-                // --- VẼ CHÒM SAO BẠCH DƯƠNG ---
-                const cx = canvas.width/2; 
-                const cy = canvas.height/2;
+                // --- 3. VẼ CHÒM SAO BẠCH DƯƠNG (CỐ ĐỊNH GIỮA MÀN HÌNH) ---
+                const cx = canvas.width / 2; 
+                const cy = canvas.height / 2;
                 
-                ctx.strokeStyle = "rgba(255, 255, 0, 0.8)"; 
-                ctx.lineWidth = 1; 
+                ctx.strokeStyle = "rgba(255, 255, 0, 0.5)"; 
+                ctx.lineWidth = 1.5; 
                 ctx.beginPath();
-                ctx.moveTo(cx - 50, cy + 20); // Điểm 1
-                ctx.lineTo(cx, cy);           // Điểm 2
-                ctx.lineTo(cx + 40, cy + 10); // Điểm 3
-                ctx.lineTo(cx + 60, cy + 30); // Điểm 4
+                // Tọa độ các điểm sao Bạch Dương (Aries)
+                ctx.moveTo(cx - 60, cy + 30); // Điểm đuôi
+                ctx.lineTo(cx - 10, cy + 10); // Điểm giữa
+                ctx.lineTo(cx + 30, cy - 10); // Điểm đầu
+                ctx.lineTo(cx + 60, cy + 20); // Điểm sừng nhỏ
                 ctx.stroke();
                 
-                // Chấm các ngôi sao chính
-                ctx.fillStyle = "yellow";
+                // Chấm các ngôi sao chính của chòm sao
+                ctx.fillStyle = "#ffffa0"; // Vàng nhạt
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = "white";
                 [
-                    {x: cx - 50, y: cy + 20}, {x: cx, y: cy},
-                    {x: cx + 40, y: cy + 10}, {x: cx + 60, y: cy + 30}
+                    {x: cx - 60, y: cy + 30, r: 4}, 
+                    {x: cx - 10, y: cy + 10, r: 3},
+                    {x: cx + 30, y: cy - 10, r: 5}, // Sao Alpha sáng nhất
+                    {x: cx + 60, y: cy + 20, r: 3}
                 ].forEach(p => {
-                    ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
                 });
 
                 // Chữ phát sáng
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 5;
                 ctx.shadowColor = "yellow";
-                ctx.font = "12px Tahoma";
-                ctx.fillText("Bạch Dương (09/04)", cx - 20, cy + 50);
-                ctx.shadowBlur = 0;
+                ctx.font = "bold 14px Tahoma";
+                ctx.fillStyle = "yellow";
+                ctx.textAlign = "center";
+                ctx.fillText("Bạch Dương (09/04) - Của Đồng", cx, cy + 60);
                 
+                // Reset shadow và loop tiếp
+                ctx.shadowBlur = 0;
                 requestAnimationFrame(animateStars);
             }
+            // Bắt đầu chạy animation
             animateStars();
         }
         // --- EXISTING LOGIC (CONFESSION, SNAKE, CALC, WINAMP, CHROME, TASKMGR, GLITCH) ---
@@ -1211,6 +1245,7 @@
     </script>
 </body>
 </html>
+
 
 
 
