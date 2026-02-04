@@ -29,7 +29,27 @@
             font-size: 14px;
         }
 
-        /* --- BSOD --- */
+        /* --- GLITCH & BSOD EFFECTS --- */
+        #glitch-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.2); z-index: 200000; pointer-events: none;
+            mix-blend-mode: hard-light;
+        }
+        
+        @keyframes glitch-anim {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+        
+        .glitching {
+            animation: glitch-anim 0.1s infinite;
+            filter: hue-rotate(90deg) contrast(1.5);
+        }
+
         #bsod {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0000aa; color: white;
@@ -77,6 +97,8 @@
         .icon-calc { color: #a569bd; }
         .icon-chrome-bg { background: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
         .icon-chrome { color: #ea4335; font-size: 24px; }
+        .icon-taskmgr { color: #27ae60; text-shadow: 0 0 2px #2ecc71; }
+        .icon-warning { color: #e67e22; text-shadow: 0 0 2px #f39c12; }
 
         /* --- WINDOWS --- */
         .window {
@@ -98,7 +120,9 @@
         .win-btn-close i { color: white; font-size: 12px; }
 
         /* --- APP STYLES --- */
-        
+        /* Common */
+        .menu-bar { background: #ece9d8; padding: 2px 5px; font-size: 11px; border-bottom: 1px solid #a0a0a0; flex-shrink: 0; }
+
         /* Confession */
         #secret-window { width: 90%; max-width: 600px; height: 70vh; top: 45% !important; left: 50% !important; transform: translate(-50%, -50%) !important; }
         #secret-window .window-body { padding: 0; background: black; flex: 1; overflow-y: auto; }
@@ -112,7 +136,6 @@
         /* Notepad */
         #notepad-window { width: 300px; height: 300px; top: 10%; right: 10%; }
         #notepad-window .window-body { padding: 0; display: flex; flex-direction: column; flex: 1; background: white; }
-        .menu-bar { background: #ece9d8; padding: 2px 5px; font-size: 11px; border-bottom: 1px solid #a0a0a0; flex-shrink: 0; }
         .notepad-area { flex: 1; width: 100%; border: none; padding: 5px; font-family: 'Consolas', monospace; resize: none; outline: none; box-sizing: border-box; display: block; }
 
         /* Calc */
@@ -122,17 +145,34 @@
         .calc-btn { height: 30px; font-size: 12px; cursor: pointer; border: 1px solid #fff; border-right-color: #000; border-bottom-color: #000; background: #f0f0f0; }
         .calc-btn:active { border-color: #000 #fff #fff #000; }
 
-        /* Winamp - Playlist Style */
+        /* Winamp */
         #winamp-window { width: 300px; height: auto; top: 60%; left: 10%; background: #222; border: 2px solid #555; border-radius: 0; color: #0f0; font-family: sans-serif; }
         .winamp-visualizer { height: 40px; background: #000; margin: 5px 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 2px; border: 1px inset #555; }
         .bar { width: 8px; background: #0f0; transition: height 0.1s; }
         .song-title-display { background: #000; color: #0f0; border: 1px solid #555; font-size: 11px; padding: 4px; width: 100%; font-family: monospace; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        
         .winamp-btn { cursor: pointer; color: #bbb; transition: all 0.2s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; background: #333; border-radius: 50%; }
         .winamp-btn:hover { color: white; border-color: #888; background: #444; transform: scale(1.1); }
         .winamp-btn:active { transform: scale(0.9); }
         .winamp-btn.play-btn { color: #0f0; border-color: #060; }
         .winamp-btn.stop-btn { color: #f00; border-color: #600; }
+
+        /* Task Manager */
+        #taskmgr-window { width: 400px; height: 450px; top: 25%; left: 30%; font-family: 'Tahoma', sans-serif; font-size: 11px; }
+        .task-tabs { display: flex; padding: 2px 2px 0 2px; background: #ece9d8; border-bottom: 1px solid #888; }
+        .task-tab { padding: 4px 10px; border: 1px solid #888; border-bottom: none; background: #ece9d8; border-radius: 3px 3px 0 0; margin-right: 2px; cursor: pointer; }
+        .task-tab.active { background: white; font-weight: bold; position: relative; top: 1px; padding-bottom: 5px; }
+        .task-body { background: white; padding: 10px; flex: 1; border: 1px solid #888; border-top: none; display: flex; flex-direction: column; }
+        
+        .cpu-graph-container {
+            border: 2px solid #000; background: #000; height: 100px; position: relative; overflow: hidden; display: flex; align-items: flex-end; gap: 2px;
+        }
+        .cpu-bar { width: 5px; background: #0f0; }
+        
+        .process-list { border: 1px solid #888; flex: 1; overflow-y: auto; background: white; margin-bottom: 10px; }
+        .process-header { display: flex; background: #ece9d8; border-bottom: 1px solid #888; font-weight: bold; padding: 2px; }
+        .process-row { display: flex; padding: 2px; border-bottom: 1px dotted #ccc; }
+        .process-row:hover { background: #316ac5; color: white; }
+        .col-name { width: 60%; } .col-cpu { width: 20%; text-align: right; } .col-mem { width: 20%; text-align: right; }
 
         /* Chrome Browser */
         #chrome-window { width: 900px; height: 600px; top: 5%; left: 5%; background: #fff; font-family: 'Roboto', sans-serif; }
@@ -164,13 +204,13 @@
         .result-title:hover { text-decoration: underline; }
         .result-desc { color: #4d5156; font-size: 14px; line-height: 1.58; }
         
-        /* YouTube View Styled Like Real App */
+        /* YouTube View */
         .chrome-youtube-view { background: #f9f9f9; }
         .yt-sidebar-item { padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 20px; font-size: 14px; color: #0f0f0f; }
         .yt-sidebar-item:hover { background-color: #f2f2f2; }
         .yt-sidebar-item i { width: 24px; font-size: 18px; text-align: center; }
 
-        /* Fake Player Styles */
+        /* Fake Player */
         .fake-player { 
             width: 100%; height: 100%; background: #000; 
             display: flex; align-items: center; justify-content: center; 
@@ -222,11 +262,21 @@
         <span class="cursor-blink">_</span>
     </div>
 
+    <!-- GLITCH OVERLAY -->
+    <div id="glitch-overlay"></div>
+
     <!-- BSOD -->
     <div id="bsod">
         <span style="background:white; color:blue; font-weight:bold;">Love_Exception</span>
-        <p>A fatal exception LOVE has occurred at 0904:2004.</p>
-        <p>Press any key to restart your heart.</p>
+        <p class="mt-4">A fatal exception LOVE has occurred at 0904:2004.</p>
+        <p>The system has detected an overdose of affection.</p>
+        <p class="mt-4 text-yellow-300 blink">> Hệ thống phát hiện một đối tượng quá xinh đẹp đang truy cập.</p>
+        <p class="text-yellow-300 blink">> Trái tim của Admin (Phạm Chu Đồng) bị quá tải.</p>
+        <p class="text-yellow-300 blink">> Đang khởi động lại chế độ: Yêu thương vô điều kiện...</p>
+        
+        <p class="mt-8">Technical Information:</p>
+        <p>*** STOP: 0x0000LOVE (MISS_YOU.EXE, HUG_ME.SYS)</p>
+        <p class="mt-4">Press any key to accept your fate...</p>
     </div>
 
     <!-- DESKTOP -->
@@ -255,6 +305,18 @@
                 <span>Chrome</span>
             </div>
 
+            <!-- TASK MANAGER ICON -->
+            <div class="desktop-icon" onclick="openWindow('taskmgr-window'); startTaskMgr();">
+                <i class="fas fa-desktop xp-icon icon-taskmgr"></i>
+                <span>Task Manager</span>
+            </div>
+
+            <!-- SYSTEM UPDATE (GLITCH TRIGGER) -->
+            <div class="desktop-icon" onclick="triggerGlitch()">
+                <i class="fas fa-exclamation-triangle xp-icon icon-warning"></i>
+                <span>System Update</span>
+            </div>
+
             <div class="desktop-icon" onclick="openWindow('calc-window')">
                 <i class="fas fa-calculator xp-icon icon-calc"></i>
                 <span>Love Calc</span>
@@ -263,11 +325,6 @@
             <div class="desktop-icon" onclick="openWindow('winamp-window')">
                 <i class="fas fa-music xp-icon icon-music"></i>
                 <span>Nhịp Tim</span>
-            </div>
-
-            <div class="desktop-icon" onclick="showError('My Computer', 'Lỗi: Hệ điều hành này chỉ chạy trên tim cậu thôi.')">
-                <i class="fas fa-desktop xp-icon icon-computer"></i>
-                <span>My Computer</span>
             </div>
 
             <div class="desktop-icon" onclick="showError('Recycle Bin', 'Không thể xóa em khỏi bộ nhớ!')">
@@ -357,7 +414,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             </div>
         </div>
 
-        <!-- 5. WINAMP (CLEAN PLAYLIST ONLY) -->
+        <!-- 5. WINAMP -->
         <div id="winamp-window" class="window">
             <div class="window-header" style="background: #333;" onmousedown="startDrag(event, 'winamp-window')">
                 <div class="window-title" style="color: #0f0;">WINAMP - Love.mp3</div>
@@ -383,7 +440,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             </div>
         </div>
 
-        <!-- 6. CHROME BROWSER (AUTOPLAY ENABLED) -->
+        <!-- 6. CHROME BROWSER -->
         <div id="chrome-window" class="window">
             <div class="window-header" onmousedown="startDrag(event, 'chrome-window')">
                 <div class="window-title">Google Chrome</div>
@@ -464,7 +521,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                     </div>
                 </div>
 
-                <!-- VIEW 3: YOUTUBE FAKE UI (AUTOPLAY ENABLED) -->
+                <!-- VIEW 3: YOUTUBE FAKE UI -->
                 <div class="chrome-view chrome-youtube-view hidden-view" id="view-youtube">
                     <!-- YT Header -->
                     <div class="bg-white px-4 py-2 flex items-center justify-between border-b border-gray-200">
@@ -516,7 +573,13 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                                 <!-- Main Player Container -->
                                 <div class="flex-1">
                                     <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative group" id="video-container">
-                                        <!-- Will be filled by JS -->
+                                        <!-- Fake Player (Click to Load) -->
+                                        <div class="fake-player" onclick="loadRealVideo()">
+                                            <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
+                                            <div class="play-btn-overlay">
+                                                <div class="play-triangle"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                     <div class="mt-4">
@@ -574,6 +637,58 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             </div>
         </div>
 
+        <!-- 7. TASK MANAGER OF TRUTH -->
+        <div id="taskmgr-window" class="window">
+            <div class="window-header" onmousedown="startDrag(event, 'taskmgr-window')">
+                <div class="window-title"><i class="fas fa-desktop mr-2"></i> Windows Task Manager</div>
+                <div class="win-btn-close" onclick="closeWindow('taskmgr-window')"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="task-tabs">
+                <div class="task-tab">Applications</div>
+                <div class="task-tab active">Processes</div>
+                <div class="task-tab">Performance</div>
+                <div class="task-tab">Networking</div>
+                <div class="task-tab">Users</div>
+            </div>
+            <div class="task-body">
+                <div class="process-list">
+                    <div class="process-header">
+                        <div class="col-name">Image Name</div>
+                        <div class="col-cpu">CPU</div>
+                        <div class="col-mem">Mem Usage</div>
+                    </div>
+                    <!-- Fake Processes -->
+                    <div class="process-row text-red-600 font-bold">
+                        <div class="col-name">Miss_You.exe</div><div class="col-cpu">99</div><div class="col-mem">1,024,000 K</div>
+                    </div>
+                    <div class="process-row">
+                        <div class="col-name">Love.dll</div><div class="col-cpu">01</div><div class="col-mem">520,000 K</div>
+                    </div>
+                    <div class="process-row">
+                        <div class="col-name">Thinking_Of_You.sys</div><div class="col-cpu">00</div><div class="col-mem">240,000 K</div>
+                    </div>
+                    <div class="process-row text-gray-400">
+                        <div class="col-name">Hoc_Tap.exe (Not Responding)</div><div class="col-cpu">00</div><div class="col-mem">4,000 K</div>
+                    </div>
+                    <div class="process-row text-gray-400">
+                        <div class="col-name">Di_Choi.exe (Suspended)</div><div class="col-cpu">00</div><div class="col-mem">2,000 K</div>
+                    </div>
+                    <div class="process-row">
+                        <div class="col-name">System Idle Process</div><div class="col-cpu">00</div><div class="col-mem">16 K</div>
+                    </div>
+                </div>
+                
+                <div class="mt-2 text-xs font-bold mb-1">CPU Usage History</div>
+                <div class="cpu-graph-container" id="cpu-graph">
+                    <!-- JS fills this -->
+                </div>
+                <div class="flex justify-between mt-1 text-xs">
+                    <span>CPU Usage: 100%</span>
+                    <span>Processes: 6</span>
+                </div>
+            </div>
+        </div>
+
         <!-- TASKBAR -->
         <div class="taskbar">
             <div class="start-button" onclick="alert('Đường vào tim Đồng chỉ có một cửa thôi!')">
@@ -596,7 +711,10 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                 const d = document.createElement('div'); d.textContent = bootText[lineIdx++];
                 document.getElementById('boot-text').appendChild(d);
                 setTimeout(typeBoot, 150);
-            } else { setTimeout(() => { document.getElementById('boot-screen').style.display='none'; document.getElementById('desktop').style.display='block'; }, 600); }
+            } else { setTimeout(() => { document.getElementById('boot-screen').style.display='none'; document.getElementById('desktop').style.display='block'; 
+                // Auto trigger glitch after 60s
+                setTimeout(triggerGlitch, 60000);
+            }, 600); }
         }
         window.onload = typeBoot;
 
@@ -606,8 +724,6 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             const w = document.getElementById(id);
             w.style.display = 'flex'; w.style.zIndex = ++highestZ;
             if(id === 'secret-window' && document.getElementById('typewriter-text').innerHTML === "") typeConfession();
-            
-            // Reset Chrome if opening
             if(id === 'chrome-window') {
                 if(document.getElementById('view-search').classList.contains('hidden-view') && 
                    document.getElementById('view-results').classList.contains('hidden-view') &&
@@ -692,7 +808,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
         function clearCalc() { document.getElementById('calc-res').innerText = ''; }
         function loveResult() { document.getElementById('calc-res').innerText = '09/04/2004'; }
 
-        // --- CHROME LOGIC (UPDATED) ---
+        // --- CHROME LOGIC ---
         function showView(viewId) {
             document.querySelectorAll('.chrome-view').forEach(el => el.classList.add('hidden-view'));
             document.getElementById(viewId).classList.remove('hidden-view');
@@ -702,86 +818,41 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             showView('view-search');
             document.getElementById('chrome-url').innerText = "https://www.google.com";
             document.getElementById('google-input').value = "";
-            document.getElementById('video-container').innerHTML = ""; // Clear video when going home
-        }
-
-        function doGoogleSearch() {
-            const val = document.getElementById('google-input').value.trim();
-            if(!val) return;
-            
-            // Tính năng mới: Dán link Youtube vào search box -> Tự động phát
-            if (val.includes('youtube.com/watch?v=') || val.includes('youtu.be/')) {
-                let videoId = '';
-                if (val.includes('v=')) {
-                    videoId = val.split('v=')[1].split('&')[0];
-                } else if (val.includes('youtu.be/')) {
-                    videoId = val.split('youtu.be/')[1].split('?')[0];
-                }
-
-                if (videoId) {
-                    openYouTube(videoId);
-                    return;
-                }
-            }
-
-            // Normal Search
-            showView('view-results');
-            document.getElementById('result-bar-text').innerText = val;
-            document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
-        }
-
-        // LOAD VIDEO FIX LỖI 153 (DÙNG IFRAME CHUẨN)
-        function loadRealVideo() {
-            const container = document.getElementById('video-container');
-            // Dùng iframe chuẩn với autoplay=1
-            container.innerHTML = `
-                <iframe width="100%" height="100%" 
-                    src="https://www.youtube.com/embed/vVhKA9Av6vA?autoplay=1" 
-                    title="YouTube video player" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    referrerpolicy="strict-origin-when-cross-origin" 
-                    allowfullscreen>
-                </iframe>`;
-        }
-
-        function openYouTube(videoId) { 
-            showView('view-youtube');
-            // Default if undefined
-            if (!videoId) videoId = 'vVhKA9Av6vA';
-            
-            if (videoId.includes('?')) videoId = videoId.split('?')[0];
-
-            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=" + videoId;
-            
-            const container = document.getElementById('video-container');
-
-            if(videoId === 'vVhKA9Av6vA') {
-                document.getElementById('yt-video-title').innerText = "'bao tiền một mớ bình yên?' - 14 Casper & Bon Nghiêm (Official) (Track 09 - Album 'SỐ KHÔNG')";
-                // Show fake player for main video
-                container.innerHTML = `
+            document.getElementById('video-container').innerHTML = `
                 <div class="fake-player" onclick="loadRealVideo()">
                     <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
                     <div class="play-btn-overlay">
                         <div class="play-triangle"></div>
                     </div>
                 </div>`;
-            } else {
-                document.getElementById('yt-video-title').innerText = "Video YouTube";
-                // Autoplay for others
-                container.innerHTML = `
+        }
+
+        function doGoogleSearch() {
+            const val = document.getElementById('google-input').value.trim();
+            if(!val) return;
+            showView('view-results');
+            document.getElementById('result-bar-text').innerText = val;
+            document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
+        }
+
+        function loadRealVideo() {
+            const container = document.getElementById('video-container');
+            container.innerHTML = `
                 <iframe width="100%" height="100%" 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                    src="https://www.youtube.com/embed/vVhKA9Av6vA?list=RDvVhKA9Av6vA&autoplay=1" 
                     title="YouTube video player" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     allowfullscreen>
                 </iframe>`;
-            }
         }
 
-        // --- WINAMP MUSIC LOGIC (PLAYLIST VERSION) ---
-        
+        function openYouTube() { 
+            showView('view-youtube');
+            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=vVhKA9Av6vA";
+        }
+
+        // --- WINAMP MUSIC LOGIC ---
         // =========================================================================
         // HƯỚNG DẪN TẠO LINK MP3 BẤT TỬ:
         // 1. Upload file nhạc .mp3 lên cùng thư mục với file index.html trên GitHub.
@@ -794,10 +865,9 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             },
             {
                 title: "2. SECRET", 
-                src: "./nhac.mp3" // <-- Sửa tên file nhạc mày đã up lên GitHub vào đây
+                src: "./nhac.mp3"
             }
         ];
-        // =========================================================================
 
         let currentTrackIndex = 0;
         let audio = document.getElementById('audio-player');
@@ -806,34 +876,24 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
 
         document.getElementById('song-title').innerText = playlist[currentTrackIndex].title;
 
-        // Hàm chuyển đổi link Drive thành direct link
+        // Auto process Drive Link
         function getDirectDriveLink(url) {
             if (!url) return url;
             if (url.includes('drive.google.com')) {
                 let fileId = null;
-                // Match /d/ID/ or id=ID
                 const match1 = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
                 const match2 = url.match(/id=([a-zA-Z0-9_-]+)/);
-                
                 if (match1) fileId = match1[1];
                 else if (match2) fileId = match2[1];
-                
-                if (fileId) {
-                    return `https://drive.google.com/uc?export=download&id=${fileId}`;
-                }
+                if (fileId) return `https://drive.google.com/uc?export=download&id=${fileId}`;
             }
             return url;
         }
 
         function handleAudioError() {
             stopVisualizer();
-            // Tắt alert lỗi để đỡ phiền nếu link chưa chuẩn
             console.log("Lỗi phát nhạc: Kiểm tra xem đã upload file nhạc lên GitHub chưa.");
-            
-            // Tự động chuyển bài nếu lỗi (để tìm bài nào chạy được)
-            if (isPlaying) {
-                 setTimeout(() => nextSong(), 1000);
-            }
+            if (isPlaying) { setTimeout(() => nextSong(), 1000); }
             isPlaying = false;
         }
 
@@ -841,85 +901,80 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             if (index >= 0 && index < playlist.length) {
                 currentTrackIndex = index;
                 const rawSrc = playlist[index].src;
-                const directSrc = getDirectDriveLink(rawSrc); // Xử lý link Drive
-                
+                const directSrc = getDirectDriveLink(rawSrc);
                 audio.src = directSrc;
                 document.getElementById('song-title').innerText = playlist[index].title;
-                
-                if (isPlaying) {
-                    playMusic();
-                }
+                if (isPlaying) { playMusic(); }
             }
         }
 
         function playMusic() {
-            if (!audio.src) {
-                // Load bài đầu tiên nếu chưa có
-                loadTrack(currentTrackIndex);
-            }
-            
+            if (!audio.src) { loadTrack(currentTrackIndex); }
             const playPromise = audio.play();
             if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    isPlaying = true;
-                    startVisualizer();
-                })
-                .catch(error => {
-                    console.log("Play error:", error);
-                    // Lỗi sẽ được xử lý ở onError
-                });
+                playPromise.then(_ => { isPlaying = true; startVisualizer(); })
+                .catch(error => { console.log("Play error:", error); });
             }
         }
         
-        function pauseMusic() { 
-            audio.pause(); 
-            isPlaying = false;
-            stopVisualizer(); 
-        }
-        
-        function stopMusic() { 
-            audio.pause(); 
-            audio.currentTime = 0; 
-            isPlaying = false;
-            stopVisualizer(); 
-        }
-
-        function nextSong() {
-            let nextIndex = currentTrackIndex + 1;
-            if (nextIndex >= playlist.length) nextIndex = 0; 
-            loadTrack(nextIndex);
-            playMusic();
-        }
-
-        function prevSong() {
-            let prevIndex = currentTrackIndex - 1;
-            if (prevIndex < 0) prevIndex = playlist.length - 1;
-            loadTrack(prevIndex);
-            playMusic();
-        }
-
-        audio.onended = function() {
-            nextSong();
-        };
+        function pauseMusic() { audio.pause(); isPlaying = false; stopVisualizer(); }
+        function stopMusic() { audio.pause(); audio.currentTime = 0; isPlaying = false; stopVisualizer(); }
+        function nextSong() { let nextIndex = currentTrackIndex + 1; if (nextIndex >= playlist.length) nextIndex = 0; loadTrack(nextIndex); playMusic(); }
+        function prevSong() { let prevIndex = currentTrackIndex - 1; if (prevIndex < 0) prevIndex = playlist.length - 1; loadTrack(prevIndex); playMusic(); }
+        audio.onended = function() { nextSong(); };
 
         function startVisualizer() {
             const c = document.getElementById('visualizer'); c.innerHTML = '';
-            for(let i=0; i<20; i++) {
-                const b = document.createElement('div'); b.className = 'bar';
-                b.style.height = '10px'; b.style.width = '10px'; c.appendChild(b);
-            }
+            for(let i=0; i<20; i++) { const b = document.createElement('div'); b.className = 'bar'; b.style.height = '10px'; b.style.width = '10px'; c.appendChild(b); }
             clearInterval(visInterval);
-            visInterval = setInterval(() => {
-                const bars = document.querySelectorAll('.bar');
-                bars.forEach(b => { b.style.height = Math.floor(Math.random()*30+5)+'px'; });
-            }, 100);
+            visInterval = setInterval(() => { const bars = document.querySelectorAll('.bar'); bars.forEach(b => { b.style.height = Math.floor(Math.random()*30+5)+'px'; }); }, 100);
         }
         function stopVisualizer() { clearInterval(visInterval); }
+
+        // --- TASK MANAGER GRAPH ---
+        let tmInterval;
+        function startTaskMgr() {
+            const g = document.getElementById('cpu-graph');
+            g.innerHTML = '';
+            // Fill with initial bars
+            for(let i=0; i<50; i++) {
+                const b = document.createElement('div'); b.className = 'cpu-bar'; b.style.height = '100%'; g.appendChild(b);
+            }
+            // Animate only slightly to keep it "stuck" at 100%
+            clearInterval(tmInterval);
+            tmInterval = setInterval(() => {
+                const bars = document.querySelectorAll('.cpu-bar');
+                bars.forEach(b => { b.style.height = (90 + Math.random()*10) + '%'; });
+            }, 500);
+        }
+
+        // --- GLITCH & BSOD TRIGGER ---
+        function triggerGlitch() {
+            // 1. Shake and color glitch
+            document.body.classList.add('glitching');
+            document.getElementById('glitch-overlay').style.display = 'block';
+            
+            // 2. Play error sound (simulated by alert loop or visual chaos)
+            
+            // 3. Trigger BSOD after 2 seconds
+            setTimeout(() => {
+                document.body.classList.remove('glitching');
+                document.getElementById('glitch-overlay').style.display = 'none';
+                document.getElementById('bsod').style.display = 'block';
+            }, 2000);
+
+            // 4. Auto restore after 8 seconds of BSOD
+            setTimeout(() => {
+                document.getElementById('bsod').style.display = 'none';
+                // Maybe open Confession window automatically as a "restart"
+                openWindow('secret-window');
+            }, 10000);
+        }
 
         // --- EASTER EGG ---
         const konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
         let kIdx = 0;
-        document.addEventListener('keydown', (e) => { if(e.key === konami[kIdx]) { kIdx++; if(kIdx === konami.length) { document.getElementById('bsod').style.display = 'block'; kIdx = 0; } } else { kIdx = 0; } });
+        document.addEventListener('keydown', (e) => { if(e.key === konami[kIdx]) { kIdx++; if(kIdx === konami.length) { triggerGlitch(); kIdx = 0; } } else { kIdx = 0; } });
         document.getElementById('bsod').addEventListener('click', function() { this.style.display = 'none'; });
 
         // --- CLOCK ---
