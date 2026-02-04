@@ -946,8 +946,94 @@
             <audio id="sfx-open" src="./open.mp3"></audio>
             <audio id="sfx-rare" src="./rare.mp3"></audio>
         </div>
+
+<!-- 11. GACHA LOVE BOX (Thêm đoạn này vào trước Taskbar) -->
+        <div id="gacha-window" class="window">
+            <div class="window-header" onmousedown="startDrag(event, 'gacha-window')">
+                <div class="window-title">
+                    <!-- Bấm 5 lần vào icon hộp quà này để mở Admin Mode -->
+                    <i class="fas fa-gift mr-2 text-yellow-300 cursor-pointer" onclick="triggerAdminGacha()"></i> 
+                    Cỗ Máy Tình Yêu (Love Box)
+                </div>
+                <div class="win-btn-close" onclick="closeWindow('gacha-window')"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div class="gacha-stage">
+                <div class="gacha-cube" id="cube">
+                    <div class="gacha-face face-front"></div>
+                    <div class="gacha-face face-back"></div>
+                    <div class="gacha-face face-right"></div>
+                    <div class="gacha-face face-left"></div>
+                    <div class="gacha-face face-top"></div>
+                    <div class="gacha-face face-bottom"></div>
+                </div>
+                
+                <!-- Popup nhận quà -->
+                <div id="reward-popup">
+                    <div class="light-beam"></div>
+                    <img id="reward-img" src="" alt="Reward">
+                    <div id="reward-rank" class="uppercase text-xs font-bold tracking-widest mb-1">Rank</div>
+                    <div id="reward-name">Item Name</div>
+                    <div id="reward-desc">Description</div>
+                    <button class="gacha-btn" onclick="closeReward()">Nhận Quà</button>
+                </div>
+            </div>
+
+            <div class="gacha-controls">
+                <div class="text-sm mb-2 font-bold text-gray-600">Lượt rút hôm nay: <span id="pull-count" class="text-red-600">3/3</span></div>
+                <button class="gacha-btn" id="pull-btn" onclick="startGacha()">RÚT THƯỞNG</button>
+            </div>
+
+            <div class="bg-gray-200 px-2 py-1 text-xs font-bold text-gray-500 border-t border-gray-300">Kho Đồ (Inventory)</div>
+            <div class="inventory-area" id="inventory-grid">
+                <!-- Vật phẩm sẽ hiện ở đây -->
+            </div>
+
+            <!-- Bảng Admin Ẩn -->
+            <div id="gacha-admin">
+                <i class="fas fa-times admin-close" onclick="document.getElementById('gacha-admin').style.display='none'"></i>
+                <h2 class="text-xl font-bold mb-4 text-yellow-400 border-b pb-2">Admin God Mode</h2>
+                
+                <div class="admin-row">
+                    <label>Tên Vật Phẩm:</label>
+                    <input type="text" id="adm-name" placeholder="Ví dụ: Nụ hôn 5 phút">
+                </div>
+                <div class="admin-row">
+                    <label>Link Ảnh (Git Path):</label>
+                    <input type="text" id="adm-img" placeholder="./item1.jpg">
+                </div>
+                <div class="admin-row">
+                    <label>Rank:</label>
+                    <select id="adm-rank">
+                        <option value="white">Trắng (Common)</option>
+                        <option value="blue">Xanh Dương (Rare)</option>
+                        <option value="purple">Tím (Epic)</option>
+                        <option value="gold">Vàng (Legendary)</option>
+                        <option value="pink">Hồng (Mythical/Love)</option>
+                    </select>
+                </div>
+                <div class="admin-row">
+                    <label>Tỷ lệ (%):</label>
+                    <input type="number" id="adm-rate" placeholder="10">
+                </div>
+                <div class="admin-row">
+                    <label>Chú thích:</label>
+                    <input type="text" id="adm-desc" placeholder="Lời nhắn nhủ...">
+                </div>
+                <button class="xp-button w-full font-bold" onclick="addGachaItem()">Thêm Vật Phẩm</button>
+                
+                <div class="mt-4 border-t pt-2">
+                    <button class="bg-red-600 text-white px-2 py-1 text-xs rounded" onclick="resetGachaData()">Reset Toàn Bộ Dữ Liệu</button>
+                </div>
+            </div>
+            
+            <!-- Sounds (Nhớ up file lên git) -->
+            <audio id="sfx-shake" src="./shake.mp3"></audio>
+            <audio id="sfx-open" src="./open.mp3"></audio>
+        </div>
         
         <!-- TASKBAR -->
+        
         <div class="taskbar">
             <div class="start-button" onclick="alert('Đường vào tim Đồng chỉ có một cửa thôi!')"><i class="fab fa-windows mr-1"></i><span class="italic font-bold">start</span></div>
             <div class="border-r border-white/20 h-4 mx-1"></div>
@@ -1630,6 +1716,7 @@
     </script>
 </body>
 </html>
+
 
 
 
