@@ -122,19 +122,17 @@
         .calc-btn { height: 30px; font-size: 12px; cursor: pointer; border: 1px solid #fff; border-right-color: #000; border-bottom-color: #000; background: #f0f0f0; }
         .calc-btn:active { border-color: #000 #fff #fff #000; }
 
-        /* Winamp */
+        /* Winamp - Playlist Style */
         #winamp-window { width: 300px; height: auto; top: 60%; left: 10%; background: #222; border: 2px solid #555; border-radius: 0; color: #0f0; font-family: sans-serif; }
         .winamp-visualizer { height: 40px; background: #000; margin: 5px 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 2px; border: 1px inset #555; }
         .bar { width: 8px; background: #0f0; transition: height 0.1s; }
         .song-title-display { background: #000; color: #0f0; border: 1px solid #555; font-size: 11px; padding: 4px; width: 100%; font-family: monospace; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .file-upload-label { display: block; background: #333; color: #ddd; border: 1px solid #555; padding: 4px; text-align: center; font-size: 11px; cursor: pointer; margin-bottom: 5px; font-family: monospace; }
-        .file-upload-label:hover { background: #444; color: white; border-color: #888; }
+        
         .winamp-btn { cursor: pointer; color: #bbb; transition: all 0.2s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; background: #333; border-radius: 50%; }
         .winamp-btn:hover { color: white; border-color: #888; background: #444; transform: scale(1.1); }
-        .winamp-btn.active { transform: scale(0.9); }
+        .winamp-btn:active { transform: scale(0.9); }
         .winamp-btn.play-btn { color: #0f0; border-color: #060; }
         .winamp-btn.stop-btn { color: #f00; border-color: #600; }
-        .winamp-controls input[type="text"] { background: #000; color: #0f0; border: 1px solid #555; font-size: 11px; padding: 4px; width: 100%; font-family: monospace; margin-bottom: 5px; }
 
         /* Chrome Browser */
         #chrome-window { width: 900px; height: 600px; top: 5%; left: 5%; background: #fff; font-family: 'Roboto', sans-serif; }
@@ -171,6 +169,26 @@
         .yt-sidebar-item { padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 20px; font-size: 14px; color: #0f0f0f; }
         .yt-sidebar-item:hover { background-color: #f2f2f2; }
         .yt-sidebar-item i { width: 24px; font-size: 18px; text-align: center; }
+
+        /* Fake Player Styles */
+        .fake-player { 
+            width: 100%; height: 100%; background: #000; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; position: relative; overflow: hidden;
+        }
+        .fake-player img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: opacity 0.3s; }
+        .fake-player:hover img { opacity: 0.5; }
+        .play-btn-overlay {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 68px; height: 48px; background: rgba(33, 33, 33, 0.8);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .fake-player:hover .play-btn-overlay { background: #f00; }
+        .play-triangle {
+            width: 0; height: 0; border-style: solid; border-width: 10px 0 10px 18px;
+            border-color: transparent transparent transparent #fff;
+        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -339,7 +357,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             </div>
         </div>
 
-        <!-- 5. WINAMP -->
+        <!-- 5. WINAMP (CLEAN PLAYLIST ONLY) -->
         <div id="winamp-window" class="window">
             <div class="window-header" style="background: #333;" onmousedown="startDrag(event, 'winamp-window')">
                 <div class="window-title" style="color: #0f0;">WINAMP - Love.mp3</div>
@@ -352,14 +370,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
 
                 <div class="winamp-visualizer" id="visualizer"></div>
                 
-                <label class="file-upload-label">
-                    <i class="fas fa-folder-open mr-2"></i>Chọn file nhạc từ máy
-                    <input type="file" id="local-music-input" accept="audio/*" class="hidden" onchange="handleFileSelect(event)">
-                </label>
-
-                <div class="text-[10px] text-gray-500 font-mono mb-1 mt-2">Hoặc link (dễ lỗi):</div>
-                <input type="text" id="music-url" placeholder="https://...">
-
+                <!-- Giao diện sạch sẽ: Chỉ còn nút bấm -->
                 <div class="flex justify-between items-center mt-3 px-2">
                     <div class="winamp-btn" onclick="prevSong()"><i class="fas fa-step-backward"></i></div>
                     <div class="winamp-btn play-btn" onclick="playMusic()"><i class="fas fa-play"></i></div>
@@ -505,18 +516,24 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                                 <!-- Main Player Container -->
                                 <div class="flex-1">
                                     <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative group" id="video-container">
-                                        <!-- Will be filled by JS -->
+                                        <!-- Fake Player (Click to Load) -->
+                                        <div class="fake-player" onclick="loadRealVideo()">
+                                            <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
+                                            <div class="play-btn-overlay">
+                                                <div class="play-triangle"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                     
                                     <div class="mt-4">
-                                        <h1 class="text-xl font-bold line-clamp-2" id="yt-video-title">'bao tiền một mớ bình yên?' - 14 Casper & Bon Nghiêm (Official) (Track 09 - Album 'SỐ KHÔNG')</h1>
+                                        <h1 class="text-xl font-bold line-clamp-2" id="yt-video-title">Sơn Tùng M-TP | CHÚNG TA CỦA TƯƠNG LAI | OFFICIAL MUSIC VIDEO</h1>
                                         <div class="flex items-center justify-between mt-2">
                                             <div class="flex items-center gap-3">
                                                 <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center">
                                                     <i class="fas fa-music text-gray-500"></i>
                                                 </div>
                                                 <div>
-                                                    <div class="font-bold text-sm"> Bon Nghiêm Official</div>
+                                                    <div class="font-bold text-sm">Sơn Tùng M-TP Official 🎵</div>
                                                     <div class="text-xs text-gray-500">10M người đăng ký</div>
                                                 </div>
                                                 <button class="bg-black text-white px-4 py-2 rounded-full text-sm font-bold ml-4 hover:bg-gray-800">Đăng ký</button>
@@ -549,9 +566,9 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                                             <span class="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-[10px] px-1 rounded">10:02</span>
                                         </div>
                                         <div class="flex flex-col">
-                                            <h3 class="font-bold text-sm line-clamp-2">Trang có yêu Đồng không?</h3>
-                                            <div class="text-xs text-gray-500 mt-1">Phạm Chu Đồng</div>
-                                            <div class="text-xs text-gray-500">0 lượt xem • vừa xong</div>
+                                            <h3 class="font-bold text-sm line-clamp-2">Học Tự động hóa ở ĐH Mở Hà Nội có gì vui?</h3>
+                                            <div class="text-xs text-gray-500 mt-1">Review Đại Học</div>
+                                            <div class="text-xs text-gray-500">50K lượt xem • 1 ngày trước</div>
                                         </div>
                                     </div>
                                 </div>
@@ -691,73 +708,62 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             showView('view-search');
             document.getElementById('chrome-url').innerText = "https://www.google.com";
             document.getElementById('google-input').value = "";
-            document.getElementById('video-container').innerHTML = ""; // Clear video when going home
+            // Reset player to image when going home
+            document.getElementById('video-container').innerHTML = `
+                <div class="fake-player" onclick="loadRealVideo()">
+                    <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
+                    <div class="play-btn-overlay">
+                        <div class="play-triangle"></div>
+                    </div>
+                </div>`;
         }
 
         function doGoogleSearch() {
             const val = document.getElementById('google-input').value.trim();
             if(!val) return;
-            
-            // Tính năng mới: Dán link Youtube vào search box -> Tự động phát
-            if (val.includes('youtube.com/watch?v=') || val.includes('youtu.be/')) {
-                let videoId = '';
-                if (val.includes('v=')) {
-                    videoId = val.split('v=')[1].split('&')[0];
-                } else if (val.includes('youtu.be/')) {
-                    videoId = val.split('youtu.be/')[1].split('?')[0];
-                }
-
-                if (videoId) {
-                    openYouTube(videoId);
-                    return;
-                }
-            }
-
-            // Normal Search
             showView('view-results');
             document.getElementById('result-bar-text').innerText = val;
             document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
         }
 
-        // LƯU TIÊU ĐỀ MẶC ĐỊNH TỪ HTML (Để mày sửa HTML là ăn luôn)
-        let defaultVideoTitle = "";
-        window.addEventListener('load', () => {
-            const titleEl = document.getElementById('yt-video-title');
-            if(titleEl) defaultVideoTitle = titleEl.innerText;
-        });
-
-        function openYouTube(videoId = 'vVhKA9Av6vA') { 
-            showView('view-youtube');
-            
-            if (videoId.includes('?')) videoId = videoId.split('?')[0];
-
-            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=" + videoId;
-            
-            // AUTO PLAY ENABLED
+        // LOAD VIDEO FIX LỖI 153 (DÙNG DẠNG PLAYLIST MIX)
+        function loadRealVideo() {
             const container = document.getElementById('video-container');
+            // Trick: Dùng link có tham số list=RD... để lách luật chặn nhúng đơn lẻ
             container.innerHTML = `
                 <iframe width="100%" height="100%" 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0" 
+                    src="https://www.youtube.com/embed/vVhKA9Av6vA?list=RDvVhKA9Av6vA&autoplay=1" 
                     title="YouTube video player" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen>
                 </iframe>`;
-            
-            // LOGIC FIX: Nếu là video mặc định thì dùng tiêu đề gốc từ HTML, nếu không thì hiện tên chung
-            if(videoId === 'vVhKA9Av6vA') {
-                if(defaultVideoTitle) document.getElementById('yt-video-title').innerText = defaultVideoTitle;
-            } else {
-                document.getElementById('yt-video-title').innerText = "Video YouTube đang phát (" + videoId + ")";
-            }
         }
 
-        // --- WINAMP MUSIC LOGIC (PLAYLIST VERSION) ---
+        function openYouTube() { 
+            showView('view-youtube');
+            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=vVhKA9Av6vA";
+        }
+
+        // --- WINAMP MUSIC LOGIC (PLAYLIST VERSION with Drive Support) ---
+        
+        // =========================================================================
+        // ĐỒNG ƠI! DÁN LINK NHẠC VÀO ĐÂY (HỖ TRỢ LINK GOOGLE DRIVE):
+        // =========================================================================
         const playlist = [
-            { title: "1. Demo Chill", src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" },
-            { title: "2. Piano", src: "https://cdn.pixabay.com/download/audio/2022/02/07/audio_be05e8346f.mp3" }
+            {
+                title: "1. Demo Chill (Link mẫu)",
+                src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"
+            },
+            {
+                title: "2. Piano (Link mẫu)",
+                src: "https://cdn.pixabay.com/download/audio/2022/02/07/audio_be05e8346f.mp3"
+            },
+            // Ví dụ link Google Drive (Nhớ mở quyền 'Anyone with the link'):
+            // { title: "3. Tên Bài Hát", src: "https://drive.google.com/file/d/1A2B3C.../view?usp=sharing" }
         ];
+        // =========================================================================
+
         let currentTrackIndex = 0;
         let audio = document.getElementById('audio-player');
         let visInterval;
@@ -765,33 +771,111 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
 
         document.getElementById('song-title').innerText = playlist[currentTrackIndex].title;
 
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const objectURL = URL.createObjectURL(file);
-                audio.src = objectURL;
-                document.getElementById('song-title').innerText = file.name;
-                audio.play(); isPlaying = true; startVisualizer();
+        // Hàm chuyển đổi link Drive thành direct link
+        function getDirectDriveLink(url) {
+            if (!url) return url;
+            if (url.includes('drive.google.com')) {
+                let fileId = null;
+                // Match /d/ID/ or id=ID
+                const match1 = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                const match2 = url.match(/id=([a-zA-Z0-9_-]+)/);
+                
+                if (match1) fileId = match1[1];
+                else if (match2) fileId = match2[1];
+                
+                if (fileId) {
+                    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+                }
+            }
+            return url;
+        }
+
+        function handleAudioError() {
+            stopVisualizer();
+            // Chỉ hiện alert nếu đang cố gắng phát (tránh lỗi khi mới load trang)
+            if (isPlaying) {
+                alert("Lỗi phát nhạc! Có thể do:\n1. Link Google Drive chưa mở quyền 'Public' (Anyone with the link).\n2. Link MP3 bị chặn.\n\nĐang chuyển sang bài tiếp theo...");
+                nextSong(); // Auto skip lỗi
+            }
+            isPlaying = false;
+        }
+
+        function loadTrack(index) {
+            if (index >= 0 && index < playlist.length) {
+                currentTrackIndex = index;
+                const rawSrc = playlist[index].src;
+                const directSrc = getDirectDriveLink(rawSrc); // Xử lý link Drive
+                
+                audio.src = directSrc;
+                document.getElementById('song-title').innerText = playlist[index].title;
+                
+                if (isPlaying) {
+                    playMusic();
+                }
             }
         }
 
-        function handleAudioError() { stopVisualizer(); if (isPlaying && !audio.paused && audio.currentTime > 0) alert("Lỗi phát nhạc!"); isPlaying = false; }
-        function loadTrack(index) { if (index >= 0 && index < playlist.length) { currentTrackIndex = index; audio.src = playlist[index].src; document.getElementById('song-title').innerText = playlist[index].title; if (isPlaying) playMusic(); } }
         function playMusic() {
-            let urlInput = document.getElementById('music-url').value.trim();
-            if (urlInput) { if (audio.src !== urlInput) { audio.src = urlInput; document.getElementById('song-title').innerText = "Stream từ Link..."; } } 
-            else if (!audio.src || audio.src === window.location.href) { audio.src = playlist[currentTrackIndex].src; }
-            audio.play().then(_ => { isPlaying = true; startVisualizer(); }).catch(e => { console.log(e); });
+            if (!audio.src) {
+                // Load bài đầu tiên nếu chưa có
+                loadTrack(currentTrackIndex);
+            }
+            
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    isPlaying = true;
+                    startVisualizer();
+                })
+                .catch(error => {
+                    console.log("Play error:", error);
+                    // Lỗi sẽ được xử lý ở onError
+                });
+            }
         }
-        function pauseMusic() { audio.pause(); isPlaying = false; stopVisualizer(); }
-        function stopMusic() { audio.pause(); audio.currentTime = 0; isPlaying = false; stopVisualizer(); }
-        function nextSong() { let nextIndex = currentTrackIndex + 1; if (nextIndex >= playlist.length) nextIndex = 0; loadTrack(nextIndex); playMusic(); }
-        function prevSong() { let prevIndex = currentTrackIndex - 1; if (prevIndex < 0) prevIndex = playlist.length - 1; loadTrack(prevIndex); playMusic(); }
-        audio.onended = function() { nextSong(); };
+        
+        function pauseMusic() { 
+            audio.pause(); 
+            isPlaying = false;
+            stopVisualizer(); 
+        }
+        
+        function stopMusic() { 
+            audio.pause(); 
+            audio.currentTime = 0; 
+            isPlaying = false;
+            stopVisualizer(); 
+        }
+
+        function nextSong() {
+            let nextIndex = currentTrackIndex + 1;
+            if (nextIndex >= playlist.length) nextIndex = 0; 
+            loadTrack(nextIndex);
+            playMusic();
+        }
+
+        function prevSong() {
+            let prevIndex = currentTrackIndex - 1;
+            if (prevIndex < 0) prevIndex = playlist.length - 1;
+            loadTrack(prevIndex);
+            playMusic();
+        }
+
+        audio.onended = function() {
+            nextSong();
+        };
+
         function startVisualizer() {
             const c = document.getElementById('visualizer'); c.innerHTML = '';
-            for(let i=0; i<20; i++) { const b = document.createElement('div'); b.className = 'bar'; b.style.height = '10px'; b.style.width = '10px'; c.appendChild(b); }
-            clearInterval(visInterval); visInterval = setInterval(() => { const bars = document.querySelectorAll('.bar'); bars.forEach(b => { b.style.height = Math.floor(Math.random()*30+5)+'px'; }); }, 100);
+            for(let i=0; i<20; i++) {
+                const b = document.createElement('div'); b.className = 'bar';
+                b.style.height = '10px'; b.style.width = '10px'; c.appendChild(b);
+            }
+            clearInterval(visInterval);
+            visInterval = setInterval(() => {
+                const bars = document.querySelectorAll('.bar');
+                bars.forEach(b => { b.style.height = Math.floor(Math.random()*30+5)+'px'; });
+            }, 100);
         }
         function stopVisualizer() { clearInterval(visInterval); }
 
