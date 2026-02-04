@@ -879,30 +879,62 @@
         }
 
         // --- 3. CMD ---
+        let hasCmdError = false; // Biến kiểm tra xem đã sai lần nào chưa
+
         function initCMD() {
-            document.getElementById('cmd-input').addEventListener('keypress', function (e) {
+            // Đảm bảo trỏ đúng vào ô input mới
+            const input = document.getElementById('cmd-input');
+            
+            // Xóa event cũ để tránh bị double (nếu có)
+            const new_input = input.cloneNode(true);
+            input.parentNode.replaceChild(new_input, input);
+            
+            new_input.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
-                    const cmd = this.value;
+                    const cmd = this.value.trim().toLowerCase();
                     const output = document.getElementById('cmd-content');
-                    const div = document.createElement('div'); div.className = 'cmd-line'; div.innerText = "C:\\Users\\Dong> " + cmd;
-                    output.insertBefore(div, this.parentElement);
-                    this.value = '';
+                    
+                    // In lại lệnh vừa nhập
+                    const line = document.createElement('div'); 
+                    line.className = 'cmd-line'; 
+                    line.innerText = "C:\\Users\\Dong> " + this.value;
+                    output.insertBefore(line, this.parentElement);
+                    
+                    this.value = ''; // Xóa trắng ô nhập
                     
                     if(cmd === 'ping my_heart') {
+                        // Nếu đúng lệnh: Chạy hiệu ứng ma trận tình yêu
                         setInterval(() => {
                             const r = document.createElement('div'); r.className = 'cmd-line';
+                            r.style.color = '#00ff00'; // Màu xanh lá hacker
                             r.innerText = "Reply from CRUSH: bytes=32 time=0ms TTL=FOREVER";
                             output.insertBefore(r, this.parentElement);
-                            output.scrollTop = output.scrollHeight;
+                            output.scrollTop = output.scrollHeight; // Tự cuộn xuống dưới
                         }, 500);
                     } else {
-                        const err = document.createElement('div'); err.className = 'cmd-line'; err.innerText = "'" + cmd + "' is not recognized as an internal or external command.";
+                        // Nếu sai lệnh
+                        const err = document.createElement('div'); 
+                        err.className = 'cmd-line'; 
+                        err.innerText = "'" + cmd + "' is not recognized as an internal or external command.";
                         output.insertBefore(err, this.parentElement);
+                        
+                        // HIỆN GỢI Ý NẾU LÀ LẦN ĐẦU SAI
+                        if (!hasCmdError) {
+                             const hint = document.createElement('div'); 
+                             hint.className = 'cmd-line'; 
+                             hint.style.color = 'yellow';
+                             hint.innerText = "Gợi ý: Thử lệnh 'ping my_heart' xem sao?";
+                             output.insertBefore(hint, this.parentElement);
+                             hasCmdError = true;
+                        }
                     }
+                    // Luôn cuộn xuống dòng cuối cùng
+                    output.scrollTop = output.scrollHeight;
                 }
             });
+            // Focus vào ô nhập ngay khi mở
+            new_input.focus();
         }
-
         // --- 4. HARDWARE POPUP ---
         function startDriverInstall() {
             const bar = document.getElementById('driver-progress');
@@ -944,6 +976,7 @@
         }
 
         // --- 6. NIGHT MODE ---
+// --- 6. NIGHT MODE (ĐÃ NÂNG CẤP CỰC QUANG) ---
         function toggleNightMode() {
             const desktop = document.getElementById('desktop');
             const canvas = document.getElementById('stars-canvas');
@@ -964,40 +997,92 @@
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
+
             const stars = [];
-            for(let i=0; i<200; i++) {
+            // Tăng số lượng sao lên 300 cho dày
+            for(let i=0; i<300; i++) {
                 stars.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    r: Math.random() * 2,
-                    d: Math.random() * 0.5
+                    r: Math.random() * 2, // Bán kính
+                    a: Math.random(),     // Alpha (độ mờ hiện tại)
+                    s: 0.01 + Math.random() * 0.02 // Tốc độ nhấp nháy
                 });
             }
-            
-            function animateStars() {
-                if(canvas.style.display === 'none') return;
-                ctx.clearRect(0,0,canvas.width, canvas.height);
-                ctx.fillStyle = "white";
-                stars.forEach(s => {
-                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
-                    s.y += s.d; if(s.y > canvas.height) s.y = 0;
-                });
-                
-                // Draw Constellation (Aries - approx shape)
-                ctx.strokeStyle = "yellow"; ctx.lineWidth = 1; ctx.beginPath();
-                ctx.moveTo(canvas.width/2 - 50, canvas.height/2);
-                ctx.lineTo(canvas.width/2, canvas.height/2 - 20);
-                ctx.lineTo(canvas.width/2 + 40, canvas.height/2 - 10);
-                ctx.lineTo(canvas.width/2 + 60, canvas.height/2 + 10);
-                ctx.stroke();
-                ctx.fillStyle = "yellow"; ctx.fillText("Bạch Dương (09/04)", canvas.width/2, canvas.height/2 + 30);
-                
-                requestAnimationFrame(animateStars);
-            }
-            animateStars();
-        }
 
+            let time = 0; // Biến thời gian để vẽ cực quang
+
+            function animate() {
+                if(canvas.style.display === 'none') return;
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // --- 1. VẼ CỰC QUANG (AURORA) ---
+                time += 0.005;
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                // Dải màu tím - xanh huyền ảo
+                gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
+                gradient.addColorStop(0.3, "rgba(0, 255, 127, 0.05)"); 
+                gradient.addColorStop(0.6, "rgba(138, 43, 226, 0.08)");
+                gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height);
+                // Tạo sóng sin chuyển động mềm mại
+                for (let i = 0; i <= canvas.width; i += 10) {
+                    ctx.lineTo(i, canvas.height / 2 + Math.sin(i * 0.01 + time) * 60 + Math.cos(i * 0.003 + time) * 40);
+                }
+                ctx.lineTo(canvas.width, canvas.height);
+                ctx.fill();
+
+                // --- 2. VẼ SAO LẤP LÁNH ---
+                ctx.fillStyle = "white";
+                stars.forEach(star => {
+                    // Logic nhấp nháy: Tăng giảm độ mờ
+                    star.a += star.s;
+                    if (star.a > 1 || star.a < 0) star.s *= -1; // Đảo chiều khi đạt max/min
+                    
+                    ctx.globalAlpha = Math.max(0, Math.min(1, star.a)); 
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                ctx.globalAlpha = 1.0; // Reset alpha
+
+                // --- 3. VẼ CHÒM SAO BẠCH DƯƠNG ---
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                
+                ctx.strokeStyle = "rgba(255, 255, 0, 0.6)"; 
+                ctx.lineWidth = 1; 
+                ctx.beginPath();
+                // Nối các điểm sao
+                ctx.moveTo(cx - 80, cy + 20); 
+                ctx.lineTo(cx - 20, cy);      
+                ctx.lineTo(cx + 40, cy - 10); 
+                ctx.lineTo(cx + 70, cy + 30); 
+                ctx.stroke();
+
+                // Vẽ các điểm sao lớn
+                ctx.fillStyle = "#ffff00";
+                [
+                    {x: cx - 80, y: cy + 20}, {x: cx - 20, y: cy}, 
+                    {x: cx + 40, y: cy - 10}, {x: cx + 70, y: cy + 30}
+                ].forEach(p => {
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2); ctx.fill();
+                });
+                
+                // Chữ phát sáng
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = "#ffff00";
+                ctx.fillStyle = "yellow"; 
+                ctx.font = "14px Tahoma";
+                ctx.fillText("Bạch Dương (09/04) - Của Đồng", cx - 60, cy + 60);
+                ctx.shadowBlur = 0;
+            }
+            animate();
+        }
         // --- EXISTING LOGIC (CONFESSION, SNAKE, CALC, WINAMP, CHROME, TASKMGR, GLITCH) ---
         // (Keep all previous functions here)
         
@@ -1127,5 +1212,6 @@
     </script>
 </body>
 </html>
+
 
 
