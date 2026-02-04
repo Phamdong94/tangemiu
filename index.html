@@ -847,9 +847,43 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                 </iframe>`;
         }
 
-        function openYouTube() { 
+        function openYouTube(videoId) { 
             showView('view-youtube');
-            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=vVhKA9Av6vA";
+            // Default if undefined
+            if (!videoId) videoId = 'vVhKA9Av6vA';
+            
+            if (videoId.includes('?')) videoId = videoId.split('?')[0];
+
+            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=" + videoId;
+            
+            const container = document.getElementById('video-container');
+
+            if(videoId === 'vVhKA9Av6vA') {
+                document.getElementById('yt-video-title').innerText = "Sơn Tùng M-TP | CHÚNG TA CỦA TƯƠNG LAI | OFFICIAL MUSIC VIDEO";
+                
+                // --- SỬA ĐOẠN NÀY: Bỏ Fake Player, nhúng thẳng Iframe vào để tự chạy ---
+                container.innerHTML = `
+                <iframe width="100%" height="100%" 
+                    src="https://www.youtube.com/embed/vVhKA9Av6vA?list=RDvVhKA9Av6vA&autoplay=1" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>`;
+                // -----------------------------------------------------------------------
+
+            } else {
+                document.getElementById('yt-video-title').innerText = "Video YouTube";
+                // Autoplay for others
+                container.innerHTML = `
+                <iframe width="100%" height="100%" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                    title="YouTube video player" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>`;
+            }
         }
 
         // --- WINAMP MUSIC LOGIC ---
@@ -983,6 +1017,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
     </script>
 </body>
 </html>
+
 
 
 
