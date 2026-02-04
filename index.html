@@ -262,6 +262,85 @@
         .hidden { display: none !important; }
         .heart { position: absolute; top: -50px; font-size: 20px; color: #ff3366; animation: fall linear forwards; z-index: 9998; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        /* --- LOVE GACHA STYLES --- */
+        #gacha-window { width: 450px; height: 600px; top: 10%; left: 35%; background: #2c3e50; color: white; font-family: 'Segoe UI', sans-serif; }
+        .gacha-stage { 
+            height: 250px; background: radial-gradient(circle, #34495e 0%, #2c3e50 100%); 
+            display: flex; align-items: center; justify-content: center; perspective: 1000px; position: relative; overflow: hidden;
+        }
+        
+        /* 3D Cube */
+        .gacha-cube {
+            width: 100px; height: 100px; position: relative; transform-style: preserve-3d;
+            transition: transform 1s; cursor: pointer;
+        }
+        .gacha-face {
+            position: absolute; width: 100px; height: 100px; border: 2px solid #f1c40f;
+            background: rgba(255, 255, 255, 0.9); display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #333; backface-visibility: hidden;
+        }
+        .gacha-face img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Cube Faces Positions (Assuming images are ./box_face.jpg) */
+        .face-front  { transform: rotateY(0deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
+        .face-back   { transform: rotateY(180deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
+        .face-right  { transform: rotateY(90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
+        .face-left   { transform: rotateY(-90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
+        .face-top    { transform: rotateX(90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
+        .face-bottom { transform: rotateX(-90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
+
+        .spinning { animation: spinCube 2s infinite linear; }
+        @keyframes spinCube { from { transform: rotateX(0deg) rotateY(0deg); } to { transform: rotateX(360deg) rotateY(360deg); } }
+
+        /* Controls */
+        .gacha-controls { padding: 15px; text-align: center; background: #ecf0f1; color: #333; }
+        .gacha-btn {
+            background: #e74c3c; color: white; border: none; padding: 10px 30px; border-radius: 25px;
+            font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px #c0392b; transition: all 0.1s;
+        }
+        .gacha-btn:active { transform: translateY(4px); box-shadow: 0 0 #c0392b; }
+        .gacha-btn:disabled { background: #95a5a6; box-shadow: none; cursor: not-allowed; }
+
+        /* Inventory */
+        .inventory-area { flex: 1; background: #fff; padding: 10px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
+        .inv-item { width: 60px; height: 80px; background: #f9f9f9; border-radius: 5px; display: flex; flex-direction: column; align-items: center; padding: 2px; position: relative; border: 1px solid #ddd; }
+        .inv-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+        .inv-name { font-size: 9px; text-align: center; margin-top: 2px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        /* Ranks */
+        .rank-white { border: 2px solid #bdc3c7; box-shadow: 0 0 5px #bdc3c7; }
+        .rank-blue { border: 2px solid #3498db; box-shadow: 0 0 5px #3498db; }
+        .rank-purple { border: 2px solid #9b59b6; box-shadow: 0 0 8px #9b59b6; }
+        .rank-gold { border: 2px solid #f1c40f; box-shadow: 0 0 10px #f1c40f; animation: glowGold 2s infinite; }
+        .rank-pink { border: 2px solid #ff69b4; box-shadow: 0 0 15px #ff69b4; animation: glowPink 1.5s infinite; }
+
+        @keyframes glowGold { 0% { box-shadow: 0 0 5px #f1c40f; } 50% { box-shadow: 0 0 20px #f1c40f; } 100% { box-shadow: 0 0 5px #f1c40f; } }
+        @keyframes glowPink { 0% { box-shadow: 0 0 5px #ff69b4; } 50% { box-shadow: 0 0 25px #ff1493; } 100% { box-shadow: 0 0 5px #ff69b4; } }
+
+        /* Admin Panel (Hidden) */
+        #gacha-admin {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 100; padding: 20px; overflow-y: auto;
+        }
+        .admin-row { margin-bottom: 10px; }
+        .admin-row input, .admin-row select { width: 100%; padding: 5px; color: black; }
+        .admin-close { position: absolute; top: 10px; right: 10px; color: red; font-size: 20px; cursor: pointer; }
+
+        /* Reward Popup */
+        #reward-popup {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 50; flex-direction: column; align-items: center; justify-content: center;
+            animation: popIn 0.3s;
+        }
+        #reward-img { width: 150px; height: 150px; border-radius: 10px; margin-bottom: 15px; object-fit: cover; }
+        #reward-name { font-size: 24px; font-weight: bold; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        #reward-desc { font-size: 14px; color: #ddd; max-width: 80%; text-align: center; margin-bottom: 20px; font-style: italic; }
+        .light-beam {
+            position: absolute; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.2) 20deg, transparent 40deg);
+            animation: rotateBeam 5s infinite linear; z-index: -1;
+        }
+        @keyframes rotateBeam { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -778,6 +857,90 @@
             </div>
         </div>
 
+<!-- GACHA WINDOW -->
+        <div id="gacha-window" class="window">
+            <div class="window-header" onmousedown="startDrag(event, 'gacha-window')">
+                <div class="window-title">
+                    <!-- ICON NÀY LÀ CÔNG TẮC KÍCH HOẠT ADMIN (Click 5 lần) -->
+                    <i class="fas fa-gift mr-2 text-yellow-300 cursor-pointer" onclick="triggerAdminGacha()"></i> 
+                    Cỗ Máy Tình Yêu (Love Box)
+                </div>
+                <div class="win-btn-close" onclick="closeWindow('gacha-window')"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div class="gacha-stage">
+                <div class="gacha-cube" id="cube">
+                    <div class="gacha-face face-front"></div>
+                    <div class="gacha-face face-back"></div>
+                    <div class="gacha-face face-right"></div>
+                    <div class="gacha-face face-left"></div>
+                    <div class="gacha-face face-top"></div>
+                    <div class="gacha-face face-bottom"></div>
+                </div>
+                <div id="reward-popup">
+                    <div class="light-beam"></div>
+                    <img id="reward-img" src="" alt="Reward">
+                    <div id="reward-rank" class="uppercase text-xs font-bold tracking-widest mb-1">Rank</div>
+                    <div id="reward-name">Item Name</div>
+                    <div id="reward-desc">Description</div>
+                    <button class="gacha-btn" onclick="closeReward()">Nhận Quà</button>
+                </div>
+            </div>
+
+            <div class="gacha-controls">
+                <div class="text-sm mb-2 font-bold text-gray-600">Lượt rút hôm nay: <span id="pull-count" class="text-red-600">3/3</span></div>
+                <button class="gacha-btn" id="pull-btn" onclick="startGacha()">RÚT THƯỞNG</button>
+            </div>
+
+            <div class="bg-gray-200 px-2 py-1 text-xs font-bold text-gray-500 border-t border-gray-300">Kho Đồ (Inventory)</div>
+            <div class="inventory-area" id="inventory-grid">
+                <!-- Items will be here -->
+            </div>
+
+            <!-- HIDDEN ADMIN PANEL -->
+            <div id="gacha-admin">
+                <i class="fas fa-times admin-close" onclick="document.getElementById('gacha-admin').style.display='none'"></i>
+                <h2 class="text-xl font-bold mb-4 text-yellow-400 border-b pb-2">Admin God Mode</h2>
+                
+                <div class="admin-row">
+                    <label>Tên Vật Phẩm:</label>
+                    <input type="text" id="adm-name" placeholder="Ví dụ: Nụ hôn 5 phút">
+                </div>
+                <div class="admin-row">
+                    <label>Link Ảnh (Git Path):</label>
+                    <input type="text" id="adm-img" placeholder="./item1.jpg">
+                </div>
+                <div class="admin-row">
+                    <label>Rank:</label>
+                    <select id="adm-rank">
+                        <option value="white">Trắng (Common)</option>
+                        <option value="blue">Xanh Dương (Rare)</option>
+                        <option value="purple">Tím (Epic)</option>
+                        <option value="gold">Vàng (Legendary)</option>
+                        <option value="pink">Hồng (Mythical/Love)</option>
+                    </select>
+                </div>
+                <div class="admin-row">
+                    <label>Tỷ lệ (%):</label>
+                    <input type="number" id="adm-rate" placeholder="10">
+                </div>
+                <div class="admin-row">
+                    <label>Chú thích:</label>
+                    <input type="text" id="adm-desc" placeholder="Lời nhắn nhủ...">
+                </div>
+                <button class="xp-button w-full font-bold" onclick="addGachaItem()">Thêm Vật Phẩm</button>
+                
+                <div class="mt-4 border-t pt-2">
+                    <button class="bg-red-600 text-white px-2 py-1 text-xs rounded" onclick="resetGachaData()">Reset Toàn Bộ Dữ Liệu</button>
+                </div>
+            </div>
+            
+            <!-- Sounds -->
+            <audio id="sfx-shake" src="./shake.mp3"></audio>
+            <audio id="sfx-open" src="./open.mp3"></audio>
+            <audio id="sfx-rare" src="./rare.mp3"></audio>
+        </div>
+        
         <!-- TASKBAR -->
         <div class="taskbar">
             <div class="start-button" onclick="alert('Đường vào tim Đồng chỉ có một cửa thôi!')"><i class="fab fa-windows mr-1"></i><span class="italic font-bold">start</span></div>
@@ -1275,9 +1438,193 @@
              </iframe>`;
         }
 
+// --- LOVE GACHA LOGIC ---
+        
+        // 1. Dữ liệu mặc định (Nếu chưa có gì trong LocalStorage)
+        const defaultGachaItems = [
+            { id: 1, name: "Cái ôm ấm áp", img: "./hug.jpg", rank: "white", rate: 40, desc: "Một cái ôm nhẹ nhàng xua tan mệt mỏi." },
+            { id: 2, name: "Trà sữa full topping", img: "./milktea.jpg", rank: "blue", rate: 30, desc: "Đồng mời, không lo béo!" },
+            { id: 3, name: "Vé xem phim", img: "./ticket.jpg", rank: "purple", rate: 15, desc: "Phim gì cũng được, miễn là đi cùng nhau." },
+            { id: 4, name: "Chuyến đi chơi xa", img: "./trip.jpg", rank: "gold", rate: 10, desc: "Xách ba lô lên và đi thôi!" },
+            { id: 5, name: "Trái tim của Đồng", img: "./myheart.jpg", rank: "pink", rate: 5, desc: "Vật phẩm quý giá nhất hệ mặt trời." }
+        ];
+
+        // 2. Load dữ liệu
+        let gachaItems = JSON.parse(localStorage.getItem('xp_gacha_items')) || defaultGachaItems;
+        let inventory = JSON.parse(localStorage.getItem('xp_gacha_inventory')) || [];
+        let dailyData = JSON.parse(localStorage.getItem('xp_gacha_daily')) || { date: '', count: 3 };
+
+        // 3. Reset ngày mới
+        const today = new Date().toDateString();
+        if (dailyData.date !== today) {
+            dailyData = { date: today, count: 3 };
+            localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData));
+        }
+        updateUI();
+
+        // 4. Hàm Admin Trigger (Ẩn)
+        let adminClickCount = 0;
+        let adminClickTimer;
+        function triggerAdminGacha() {
+            adminClickCount++;
+            clearTimeout(adminClickTimer);
+            adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 2000); // Reset nếu không bấm tiếp trong 2s
+            
+            if (adminClickCount === 5) {
+                document.getElementById('gacha-admin').style.display = 'block';
+                adminClickCount = 0;
+                alert("Chào Admin! Đã mở khóa chế độ chỉnh sửa Gacha.");
+            }
+        }
+
+        // 5. Hàm Rút Thưởng
+        function startGacha() {
+            if (dailyData.count <= 0) {
+                alert("Hôm nay hết lượt rồi bé ơi! Mai quay lại nhé 😘");
+                return;
+            }
+
+            // Trừ lượt
+            dailyData.count--;
+            localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData));
+            updateUI();
+
+            // Animation
+            const cube = document.getElementById('cube');
+            const btn = document.getElementById('pull-btn');
+            btn.disabled = true;
+            cube.classList.add('spinning');
+            
+            // Play Shake Sound
+            const shakeSfx = document.getElementById('sfx-shake');
+            if(shakeSfx) { shakeSfx.currentTime = 0; shakeSfx.play().catch(e=>{}); }
+
+            // Random Logic
+            setTimeout(() => {
+                cube.classList.remove('spinning');
+                const item = rollItem();
+                showReward(item);
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        function rollItem() {
+            // Tính tổng tỷ lệ
+            let totalRate = gachaItems.reduce((sum, item) => sum + parseInt(item.rate), 0);
+            let random = Math.random() * totalRate;
+            
+            for (let item of gachaItems) {
+                if (random < item.rate) {
+                    addToInventory(item);
+                    return item;
+                }
+                random -= item.rate;
+            }
+            return gachaItems[0]; // Fallback
+        }
+
+        function addToInventory(item) {
+            // Thêm vào kho, có timestamp để sort
+            inventory.push({ ...item, obtainedAt: new Date().getTime() });
+            localStorage.setItem('xp_gacha_inventory', JSON.stringify(inventory));
+            renderInventory();
+        }
+
+        function showReward(item) {
+            const popup = document.getElementById('reward-popup');
+            const img = document.getElementById('reward-img');
+            const name = document.getElementById('reward-name');
+            const rank = document.getElementById('reward-rank');
+            const desc = document.getElementById('reward-desc');
+            const openSfx = document.getElementById('sfx-open');
+
+            // Set Data
+            img.src = item.img;
+            name.innerText = item.name;
+            desc.innerText = item.desc;
+            
+            // Set Color based on Rank
+            const colors = { white: '#ecf0f1', blue: '#3498db', purple: '#9b59b6', gold: '#f1c40f', pink: '#ff69b4' };
+            name.style.color = colors[item.rank] || 'white';
+            rank.innerText = item.rank + " ITEM";
+            rank.style.color = colors[item.rank];
+            rank.className = `uppercase text-xs font-bold tracking-widest mb-1 rank-${item.rank}`;
+
+            // Play Sound
+            if(openSfx) { openSfx.currentTime = 0; openSfx.play().catch(e=>{}); }
+
+            popup.style.display = 'flex';
+        }
+
+        function closeReward() {
+            document.getElementById('reward-popup').style.display = 'none';
+        }
+
+        function updateUI() {
+            document.getElementById('pull-count').innerText = `${dailyData.count}/3`;
+            renderInventory();
+        }
+
+        function renderInventory() {
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = '';
+            // Sort mới nhất lên đầu
+            const sortedInv = [...inventory].reverse();
+            
+            sortedInv.forEach(item => {
+                const el = document.createElement('div');
+                el.className = `inv-item rank-${item.rank}`;
+                el.title = item.desc; // Tooltip
+                el.innerHTML = `
+                    <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
+                    <div class="inv-name" style="color: black;">${item.name}</div>
+                `;
+                grid.appendChild(el);
+            });
+        }
+
+        // 6. Admin Logic: Add Item
+        function addGachaItem() {
+            const name = document.getElementById('adm-name').value;
+            const img = document.getElementById('adm-img').value;
+            const rank = document.getElementById('adm-rank').value;
+            const rate = parseInt(document.getElementById('adm-rate').value);
+            const desc = document.getElementById('adm-desc').value;
+
+            if (!name || !img || !rate) {
+                alert("Nhập thiếu thông tin rồi Admin ơi!");
+                return;
+            }
+
+            const newItem = {
+                id: Date.now(),
+                name, img, rank, rate, desc
+            };
+
+            gachaItems.push(newItem);
+            localStorage.setItem('xp_gacha_items', JSON.stringify(gachaItems));
+            
+            alert("Đã thêm vật phẩm thành công!");
+            // Reset form
+            document.getElementById('adm-name').value = '';
+        }
+
+        function resetGachaData() {
+            if(confirm("CẢNH BÁO: Hành động này sẽ xóa sạch kho đồ và reset vật phẩm về mặc định. Chắc chưa?")) {
+                localStorage.removeItem('xp_gacha_items');
+                localStorage.removeItem('xp_gacha_inventory');
+                localStorage.removeItem('xp_gacha_daily');
+                location.reload();
+            }
+        }
+
+        // Init Inventory on Load
+        renderInventory();
+        
     </script>
 </body>
 </html>
+
 
 
 
