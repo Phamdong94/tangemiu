@@ -131,7 +131,7 @@
         .file-upload-label:hover { background: #444; color: white; border-color: #888; }
         .winamp-btn { cursor: pointer; color: #bbb; transition: all 0.2s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; background: #333; border-radius: 50%; }
         .winamp-btn:hover { color: white; border-color: #888; background: #444; transform: scale(1.1); }
-        .winamp-btn:active { transform: scale(0.9); }
+        .winamp-btn.active { transform: scale(0.9); }
         .winamp-btn.play-btn { color: #0f0; border-color: #060; }
         .winamp-btn.stop-btn { color: #f00; border-color: #600; }
         .winamp-controls input[type="text"] { background: #000; color: #0f0; border: 1px solid #555; font-size: 11px; padding: 4px; width: 100%; font-family: monospace; margin-bottom: 5px; }
@@ -171,26 +171,6 @@
         .yt-sidebar-item { padding: 8px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 20px; font-size: 14px; color: #0f0f0f; }
         .yt-sidebar-item:hover { background-color: #f2f2f2; }
         .yt-sidebar-item i { width: 24px; font-size: 18px; text-align: center; }
-
-        /* Fake Player Styles */
-        .fake-player { 
-            width: 100%; height: 100%; background: #000; 
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; position: relative; overflow: hidden;
-        }
-        .fake-player img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: opacity 0.3s; }
-        .fake-player:hover img { opacity: 0.5; }
-        .play-btn-overlay {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 68px; height: 48px; background: rgba(33, 33, 33, 0.8);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            transition: background 0.2s;
-        }
-        .fake-player:hover .play-btn-overlay { background: #f00; }
-        .play-triangle {
-            width: 0; height: 0; border-style: solid; border-width: 10px 0 10px 18px;
-            border-color: transparent transparent transparent #fff;
-        }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -392,7 +372,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             </div>
         </div>
 
-        <!-- 6. CHROME BROWSER (GH READY VERSION) -->
+        <!-- 6. CHROME BROWSER (AUTOPLAY ENABLED) -->
         <div id="chrome-window" class="window">
             <div class="window-header" onmousedown="startDrag(event, 'chrome-window')">
                 <div class="window-title">Google Chrome</div>
@@ -473,7 +453,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                     </div>
                 </div>
 
-                <!-- VIEW 3: YOUTUBE FAKE UI (GH READY) -->
+                <!-- VIEW 3: YOUTUBE FAKE UI (AUTOPLAY ENABLED) -->
                 <div class="chrome-view chrome-youtube-view hidden-view" id="view-youtube">
                     <!-- YT Header -->
                     <div class="bg-white px-4 py-2 flex items-center justify-between border-b border-gray-200">
@@ -525,13 +505,7 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
                                 <!-- Main Player Container -->
                                 <div class="flex-1">
                                     <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative group" id="video-container">
-                                        <!-- Fake Player (Click to Load) -->
-                                        <div class="fake-player" onclick="loadRealVideo()">
-                                            <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
-                                            <div class="play-btn-overlay">
-                                                <div class="play-triangle"></div>
-                                            </div>
-                                        </div>
+                                        <!-- Will be filled by JS -->
                                     </div>
                                     
                                     <div class="mt-4">
@@ -717,41 +691,58 @@ Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nh�
             showView('view-search');
             document.getElementById('chrome-url').innerText = "https://www.google.com";
             document.getElementById('google-input').value = "";
-            // Reset player to image when going home
-            document.getElementById('video-container').innerHTML = `
-                <div class="fake-player" onclick="loadRealVideo()">
-                    <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
-                    <div class="play-btn-overlay">
-                        <div class="play-triangle"></div>
-                    </div>
-                </div>`;
+            document.getElementById('video-container').innerHTML = ""; // Clear video when going home
         }
 
         function doGoogleSearch() {
             const val = document.getElementById('google-input').value.trim();
             if(!val) return;
+            
+            // Tính năng mới: Dán link Youtube vào search box -> Tự động phát
+            if (val.includes('youtube.com/watch?v=') || val.includes('youtu.be/')) {
+                let videoId = '';
+                if (val.includes('v=')) {
+                    videoId = val.split('v=')[1].split('&')[0];
+                } else if (val.includes('youtu.be/')) {
+                    videoId = val.split('youtu.be/')[1].split('?')[0];
+                }
+
+                if (videoId) {
+                    openYouTube(videoId);
+                    return;
+                }
+            }
+
+            // Normal Search
             showView('view-results');
             document.getElementById('result-bar-text').innerText = val;
             document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
         }
 
-        // LOAD VIDEO FIX LỖI 153 (DÙNG IFRAME CHUẨN)
-        function loadRealVideo() {
+        function openYouTube(videoId = 'vVhKA9Av6vA') { 
+            showView('view-youtube');
+            
+            if (videoId.includes('?')) videoId = videoId.split('?')[0];
+
+            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=" + videoId;
+            
+            // AUTO PLAY ENABLED
             const container = document.getElementById('video-container');
-            // Dùng iframe chuẩn với autoplay=1
             container.innerHTML = `
                 <iframe width="100%" height="100%" 
-                    src="https://www.youtube.com/embed/vVhKA9Av6vA?autoplay=1" 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0" 
                     title="YouTube video player" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerpolicy="strict-origin-when-cross-origin"
                     allowfullscreen>
                 </iframe>`;
-        }
-
-        function openYouTube() { 
-            showView('view-youtube');
-            document.getElementById('chrome-url').innerText = "https://www.youtube.com/watch?v=vVhKA9Av6vA";
+            
+            if(videoId === 'vVhKA9Av6vA') {
+                document.getElementById('yt-video-title').innerText = "Sơn Tùng M-TP | CHÚNG TA CỦA TƯƠNG LAI | OFFICIAL MUSIC VIDEO";
+            } else {
+                document.getElementById('yt-video-title').innerText = "Video YouTube";
+            }
         }
 
         // --- WINAMP MUSIC LOGIC (PLAYLIST VERSION) ---
