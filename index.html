@@ -12,1033 +12,213 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
-        body {
-            background-color: #000;
-            overflow: hidden;
-            font-family: 'Tahoma', sans-serif;
-            user-select: none;
-            cursor: default;
-        }
+        body { background-color: #000; overflow: hidden; font-family: 'Tahoma', sans-serif; user-select: none; cursor: default; }
 
-        /* --- BOOT SCREEN --- */
-        #boot-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; color: #ddd;
-            font-family: 'Fira Code', monospace; padding: 20px;
-            z-index: 99999; display: flex; flex-direction: column;
-            font-size: 14px;
-        }
-
-        /* --- GLITCH & BSOD --- */
-        #glitch-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2); z-index: 200000; pointer-events: none;
-            mix-blend-mode: hard-light;
-        }
+        /* --- BOOT & EFFECTS --- */
+        #boot-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; color: #ddd; font-family: 'Fira Code', monospace; padding: 20px; z-index: 99999; display: flex; flex-direction: column; font-size: 14px; }
+        #glitch-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); z-index: 200000; pointer-events: none; mix-blend-mode: hard-light; }
         .glitching { animation: glitch-anim 0.1s infinite; filter: hue-rotate(90deg) contrast(1.5); }
         @keyframes glitch-anim { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
-
-        #bsod {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0000aa; color: white;
-            font-family: 'Fira Code', monospace; padding: 50px;
-            z-index: 100000; cursor: none;
-        }
-
-        /* --- DESKTOP --- */
-        #desktop {
-            background: url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png') no-repeat center center/cover;
-            height: 100vh; width: 100vw; position: relative; display: none;
-            transition: background 1s ease;
-        }
-        /* Night Mode Starry Sky */
-        #stars-canvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none;
-        }
+        #bsod { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0000aa; color: white; font-family: 'Fira Code', monospace; padding: 50px; z-index: 100000; cursor: none; }
+        #desktop { background: url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png') no-repeat center center/cover; height: 100vh; width: 100vw; position: relative; display: none; transition: background 1s ease; }
+        #stars-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
 
         /* --- ICONS --- */
-        .icon-grid {
-            display: flex; flex-direction: column; flex-wrap: wrap;
-            height: calc(100vh - 40px); width: fit-content; padding: 10px; gap: 15px;
-            position: relative; z-index: 50;
-        }
-
-        .desktop-icon {
-            width: 80px; display: flex; flex-direction: column; align-items: center;
-            text-align: center; cursor: pointer; color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,1); font-size: 11px;
-            margin-bottom: 5px; position: relative;
-        }
+        .icon-grid { display: flex; flex-direction: column; flex-wrap: wrap; height: calc(100vh - 40px); width: fit-content; padding: 10px; gap: 15px; position: relative; z-index: 50; }
+        .desktop-icon { width: 80px; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,1); font-size: 11px; margin-bottom: 5px; position: relative; }
         .desktop-icon:hover { background-color: rgba(11, 97, 255, 0.4); outline: 1px dotted rgba(255, 255, 255, 0.5); border-radius: 2px; }
         .xp-icon { font-size: 32px; margin-bottom: 5px; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5)); transition: transform 0.1s; }
         .desktop-icon:hover .xp-icon { transform: scale(1.1); }
         
-        /* Icon Colors */
-        .icon-computer { color: #5dade2; text-shadow: 0 0 2px #2e86c1; }
-        .icon-folder { color: #f4d03f; text-shadow: 0 0 2px #d4ac0d; }
-        .icon-trash { color: #d5dbdb; }
-        .icon-ie { color: #3498db; background: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-        .icon-game { color: #e74c3c; }
-        .icon-notepad { color: #fdfefe; text-shadow: 0 0 2px #bdc3c7; }
-        .icon-music { color: #e67e22; }
-        .icon-calc { color: #a569bd; }
-        .icon-chrome-bg { background: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
-        .icon-chrome { color: #ea4335; font-size: 20px; }
-        .icon-taskmgr { color: #27ae60; text-shadow: 0 0 2px #2ecc71; }
-        .icon-warning { color: #e67e22; text-shadow: 0 0 2px #f39c12; }
-        .icon-paint { color: #9b59b6; }
-        .icon-cmd { color: #34495e; background: #ecf0f1; padding: 2px; border-radius: 4px; }
-        .icon-bomb { color: #2c3e50; }
-        .icon-moon { color: #f1c40f; text-shadow: 0 0 5px #f39c12; }
+        .icon-computer { color: #5dade2; text-shadow: 0 0 2px #2e86c1; } .icon-folder { color: #f4d03f; text-shadow: 0 0 2px #d4ac0d; }
+        .icon-trash { color: #d5dbdb; } .icon-ie { color: #3498db; background: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .icon-game { color: #e74c3c; } .icon-notepad { color: #fdfefe; text-shadow: 0 0 2px #bdc3c7; } .icon-music { color: #e67e22; } .icon-calc { color: #a569bd; }
+        .icon-chrome-bg { background: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; } .icon-chrome { color: #ea4335; font-size: 20px; }
+        .icon-taskmgr { color: #27ae60; text-shadow: 0 0 2px #2ecc71; } .icon-warning { color: #e67e22; text-shadow: 0 0 2px #f39c12; }
+        .icon-paint { color: #9b59b6; } .icon-cmd { color: #34495e; background: #ecf0f1; padding: 2px; border-radius: 4px; } .icon-bomb { color: #2c3e50; } .icon-moon { color: #f1c40f; text-shadow: 0 0 5px #f39c12; }
+        .icon-box { color: #ff69b4; text-shadow: 0 0 5px #ff1493; }
 
         /* --- WINDOWS --- */
-        .window {
-            position: absolute; background: #ece9d8;
-            border-radius: 5px 5px 0 0; box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-            display: none; flex-direction: column; overflow: hidden;
-            border: 1px solid #00138c; z-index: 1000;
-        }
-        .window-header {
-            background: linear-gradient(to bottom, #0058ee 0%, #3593ff 4%, #288eec 6%, #127dff 8%, #0369fc 10%, #0262ee 14%, #0057e5 20%, #0054e3 24%, #0055ea 56%, #0052e0 66%, #004ce0 76%, #0047d9 86%, #0042d4 92%, #003cc5 94%, #0036c0 100%);
-            padding: 3px 5px; display: flex; justify-content: space-between; align-items: center; height: 28px; cursor: grab; flex-shrink: 0;
-        }
+        .window { position: absolute; background: #ece9d8; border-radius: 5px 5px 0 0; box-shadow: 4px 4px 10px rgba(0,0,0,0.5); display: none; flex-direction: column; overflow: hidden; border: 1px solid #00138c; z-index: 1000; }
+        .window-header { background: linear-gradient(to bottom, #0058ee 0%, #3593ff 4%, #288eec 6%, #127dff 8%, #0369fc 10%, #0262ee 14%, #0057e5 20%, #0054e3 24%, #0055ea 56%, #0052e0 66%, #004ce0 76%, #0047d9 86%, #0042d4 92%, #003cc5 94%, #0036c0 100%); padding: 3px 5px; display: flex; justify-content: space-between; align-items: center; height: 28px; cursor: grab; flex-shrink: 0; }
         .window-title { color: white; font-weight: bold; font-size: 12px; text-shadow: 1px 1px #000; display: flex; align-items: center; pointer-events: none; }
-        .win-btn-close {
-            width: 21px; height: 21px; background: linear-gradient(to bottom, #e07b7b 0%, #d84545 10%, #e07b7b 100%);
-            border: 1px solid white; border-radius: 3px; display: flex; justify-content: center; align-items: center; cursor: pointer;
-        }
+        .win-btn-close { width: 21px; height: 21px; background: linear-gradient(to bottom, #e07b7b 0%, #d84545 10%, #e07b7b 100%); border: 1px solid white; border-radius: 3px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .win-btn-close i { color: white; font-size: 12px; }
         .menu-bar { background: #ece9d8; padding: 2px 5px; font-size: 11px; border-bottom: 1px solid #a0a0a0; flex-shrink: 0; }
 
-        /* --- SPECIFIC APPS --- */
-        /* Confession */
-        #secret-window { width: 90%; max-width: 600px; height: 70vh; top: 45% !important; left: 50% !important; transform: translate(-50%, -50%) !important; }
-        #secret-window .window-body { padding: 0; background: black; flex: 1; overflow-y: auto; }
-        .terminal-content { padding: 15px; color: #00ff41; font-family: 'Fira Code', monospace; }
-
-        /* Snake */
-        #snake-window { width: 320px; height: 380px; top: 20%; left: 20%; background: #222; }
-        canvas { background: #000; border: 2px solid #555; display: block; margin: 0 auto; }
-        .score-board { color: #0f0; font-family: 'Press Start 2P', cursive; font-size: 10px; text-align: center; padding: 5px; }
-
-        /* Notepad */
-        #notepad-window { width: 300px; height: 300px; top: 10%; right: 10%; }
-        #notepad-window .window-body { padding: 0; display: flex; flex-direction: column; flex: 1; background: white; }
-        .notepad-area { flex: 1; width: 100%; border: none; padding: 5px; font-family: 'Consolas', monospace; resize: none; outline: none; box-sizing: border-box; display: block; }
-
-        /* Calc */
-        #calc-window { width: 220px; top: 40%; left: 60%; background: #ece9d8; }
-        .calc-display { background: white; border: 1px solid #7f9db9; height: 30px; margin: 10px; text-align: right; padding: 5px; font-family: monospace; font-size: 16px; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 0 10px 10px 10px; }
-        .calc-btn { height: 30px; font-size: 12px; cursor: pointer; border: 1px solid #fff; border-right-color: #000; border-bottom-color: #000; background: #f0f0f0; }
-        .calc-btn:active { border-color: #000 #fff #fff #000; }
-
-        /* Winamp */
-        #winamp-window { width: 300px; height: auto; top: 60%; left: 10%; background: #222; border: 2px solid #555; border-radius: 0; color: #0f0; font-family: sans-serif; }
-        .winamp-visualizer { height: 40px; background: #000; margin: 5px 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 2px; border: 1px inset #555; }
-        .bar { width: 8px; background: #0f0; transition: height 0.1s; }
-        .song-title-display { background: #000; color: #0f0; border: 1px solid #555; font-size: 11px; padding: 4px; width: 100%; font-family: monospace; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .winamp-btn { cursor: pointer; color: #bbb; transition: all 0.2s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; background: #333; border-radius: 50%; }
-        .winamp-btn:hover { color: white; border-color: #888; background: #444; transform: scale(1.1); }
-        .winamp-btn:active { transform: scale(0.9); }
-        .winamp-btn.play-btn { color: #0f0; border-color: #060; }
-        .winamp-btn.stop-btn { color: #f00; border-color: #600; }
-
-        /* Task Manager */
-        #taskmgr-window { width: 400px; height: 450px; top: 20%; left: 30%; font-family: 'Tahoma', sans-serif; font-size: 11px; }
-        .task-tabs { display: flex; padding: 2px 2px 0 2px; background: #ece9d8; border-bottom: 1px solid #888; }
-        .task-tab { padding: 4px 10px; border: 1px solid #888; border-bottom: none; background: #ece9d8; border-radius: 3px 3px 0 0; margin-right: 2px; cursor: pointer; }
-        .task-tab.active { background: white; font-weight: bold; position: relative; top: 1px; padding-bottom: 5px; }
-        .task-body { background: white; padding: 10px; flex: 1; border: 1px solid #888; border-top: none; display: flex; flex-direction: column; }
-        .cpu-graph-container { border: 2px solid #000; background: #000; height: 100px; position: relative; overflow: hidden; display: flex; align-items: flex-end; gap: 2px; }
-        .cpu-bar { width: 5px; background: #0f0; }
-        .process-list { border: 1px solid #888; flex: 1; overflow-y: auto; background: white; margin-bottom: 10px; }
-        .process-header { display: flex; background: #ece9d8; border-bottom: 1px solid #888; font-weight: bold; padding: 2px; }
-        .process-row { display: flex; padding: 2px; border-bottom: 1px dotted #ccc; }
-        .process-row:hover { background: #316ac5; color: white; }
-        .col-name { width: 60%; } .col-cpu { width: 20%; text-align: right; } .col-mem { width: 20%; text-align: right; }
-
-        /* Recycle Bin (New) */
-        #recycle-window { width: 400px; height: 300px; top: 20%; left: 20%; }
-        .file-list { background: white; flex: 1; border: 1px solid #888; padding: 10px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; }
-        .file-item { width: 60px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
-        .file-item:hover { background-color: #e8f0ff; outline: 1px dotted #ccc; }
-        .file-item i { font-size: 24px; color: #7f8c8d; margin-bottom: 2px; }
-        .file-item span { font-size: 11px; word-break: break-all; line-height: 1.2; }
-
-        /* Paint (New) */
-        #paint-window { width: 500px; height: 400px; top: 15%; left: 25%; }
-        .paint-toolbar { background: #ece9d8; padding: 5px; display: flex; gap: 5px; border-bottom: 1px solid #888; }
-        .paint-tool { width: 24px; height: 24px; border: 1px solid #888; display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; }
-        .paint-canvas-container { flex: 1; background: #888; padding: 10px; overflow: auto; display: flex; justify-content: center; align-items: center; }
-        canvas#paint-canvas { background: white; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
-
-        /* CMD (New) */
-        #cmd-window { width: 600px; height: 400px; top: 30%; left: 30%; background: black; }
-        #cmd-content { color: #ccc; font-family: 'Consolas', monospace; font-size: 14px; padding: 5px; flex: 1; overflow-y: auto; }
-        .cmd-line { margin-bottom: 2px; }
-        .cmd-input { background: transparent; border: none; color: #ccc; font-family: inherit; font-size: inherit; width: 80%; outline: none; }
-
-        /* Minesweeper (New) */
-        #mine-window { width: 250px; height: 300px; top: 40%; right: 20%; background: #c0c0c0; }
-        .mine-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding: 10px; border: 3px inset #fff; background: #888; margin: 10px; }
-        .mine-cell { width: 40px; height: 40px; background: #c0c0c0; border: 2px outset #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; }
-        .mine-cell:active { border: 2px inset #fff; }
-        .mine-cell.revealed { border: 1px solid #888; background: #c0c0c0; color: #e74c3c; }
-
-        /* Hardware Popup (New) */
-        #hardware-popup {
-            position: absolute; bottom: 40px; right: 10px; width: 250px; background: #ffffe1; border: 1px solid #000; padding: 10px;
-            display: none; flex-direction: column; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); z-index: 20000; font-family: 'Tahoma', sans-serif; font-size: 11px;
-            animation: slideUp 0.5s ease-out;
-        }
-        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .popup-header { font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; }
-        .progress-bar-container { width: 100%; height: 10px; background: white; border: 1px solid #888; margin-top: 5px; }
-        .progress-bar-fill { height: 100%; background: #000080; width: 0%; transition: width 3s linear; }
-
-        /* Chrome Browser */
-        #chrome-window { width: 900px; height: 600px; top: 5%; left: 5%; background: #fff; font-family: 'Roboto', sans-serif; }
-        .chrome-toolbar { background: #f1f3f4; padding: 8px; display: flex; align-items: center; border-bottom: 1px solid #e0e0e0; gap: 10px; flex-shrink: 0; }
-        .chrome-url-bar { flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 20px; padding: 5px 15px; font-size: 12px; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .chrome-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .chrome-view { width: 100%; height: 100%; display: flex; flex-direction: column; overflow-y: auto; background: white; }
-        .hidden-view { display: none !important; }
-        /* Chrome Search */
-        .chrome-search-view { align-items: center; justify-content: center; padding: 20px; }
-        .google-logo { font-size: 60px; font-weight: bold; margin-bottom: 20px; user-select: none; }
-        .google-blue { color: #4285f4; } .google-red { color: #ea4335; } .google-yellow { color: #fbbc05; } .google-green { color: #34a853; }
-        .search-box { width: 80%; max-width: 500px; border: 1px solid #dfe1e5; border-radius: 24px; padding: 12px 20px; display: flex; align-items: center; box-shadow: 0 1px 6px rgba(32,33,36,0.1); }
-        .search-box input { border: none; outline: none; flex: 1; font-size: 16px; margin-left: 10px; }
-        .search-btns { margin-top: 25px; display: flex; gap: 10px; }
-        .search-btn { background: #f8f9fa; border: 1px solid #f8f9fa; padding: 8px 16px; border-radius: 4px; color: #3c4043; cursor: pointer; font-size: 14px; }
-        /* Chrome Results */
-        .chrome-results-view { align-items: flex-start; justify-content: flex-start; }
-        .results-header { border-bottom: 1px solid #dfe1e5; w-full; padding: 15px; display: flex; items-center; gap: 20px; margin-bottom: 20px; }
-        .results-content { padding: 0 20px 20px 20px; width: 100%; max-width: 800px; }
-        .search-result-item { width: 100%; text-align: left; margin-bottom: 30px; animation: fadeIn 0.5s; }
-        .result-url { color: #202124; font-size: 12px; margin-bottom: 2px; }
-        .result-title { color: #1a0dab; font-size: 20px; cursor: pointer; text-decoration: none; display: block; margin-bottom: 4px; }
-        .result-title:hover { text-decoration: underline; }
-        .result-desc { color: #4d5156; font-size: 14px; line-height: 1.58; }
-        
-        /* YouTube View Styled Like Real App */
-        .chrome-youtube-view { background: #f9f9f9; }
-        .yt-sidebar-item { padding: 10px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 20px; font-size: 14px; color: #0f0f0f; }
-        .yt-sidebar-item:hover { background-color: #f2f2f2; }
-        .yt-sidebar-item i { width: 24px; font-size: 18px; text-align: center; }
-        .yt-pill { background: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
-        .yt-pill:hover { background: rgba(0,0,0,0.1); }
-        .yt-comment-input { border-bottom: 1px solid #ccc; padding-bottom: 4px; width: 100%; font-size: 14px; outline: none; }
-        .yt-comment-input:focus { border-bottom: 2px solid #000; }
-
-        /* Fake Player Styles */
-        .fake-player { 
-            width: 100%; height: 100%; background: #000; 
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; position: relative; overflow: hidden;
-        }
-        .fake-player img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: opacity 0.3s; }
-        .fake-player:hover img { opacity: 0.5; }
-        .play-btn-overlay {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 68px; height: 48px; background: rgba(33, 33, 33, 0.8);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            transition: background 0.2s;
-        }
-        .fake-player:hover .play-btn-overlay { background: #f00; }
-        .play-triangle {
-            width: 0; height: 0; border-style: solid; border-width: 10px 0 10px 18px;
-            border-color: transparent transparent transparent #fff;
-        }
-
-        /* Taskbar */
-        .taskbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 30px; background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 10%, #245edb 15%, #245edb 85%, #1941a5 100%); display: flex; align-items: center; z-index: 10000; border-top: 1px solid #5a9ce9; }
-        .start-button { height: 30px; background: linear-gradient(to bottom, #388e3c 0%, #81c784 10%, #388e3c 20%, #2e7d32 80%, #1b5e20 100%); border-radius: 0 10px 10px 0; padding: 0 15px 0 5px; display: flex; align-items: center; color: white; font-style: italic; font-weight: bold; font-size: 15px; cursor: pointer; margin-right: 10px; border: 1px solid #145214; }
-        .system-tray { margin-left: auto; background: linear-gradient(to bottom, #1c7bbd 0%, #0d96f1 10%, #1c7bbd 20%, #1c7bbd 80%, #11568d 100%); height: 100%; padding: 0 15px; display: flex; align-items: center; color: white; font-size: 11px; border-left: 1px solid #0f4e8b; }
-
-        .xp-button { padding: 4px 20px; background: #ece9d8; border: 1px solid #000; border-color: white #000 #000 white; font-size: 12px; cursor: pointer; }
-        .xp-button:active { border-color: #000 white white #000; transform: translate(1px, 1px); }
-        .hidden { display: none !important; }
-        .heart { position: absolute; top: -50px; font-size: 20px; color: #ff3366; animation: fall linear forwards; z-index: 9998; pointer-events: none; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-
-        /* --- LOVE GACHA STYLES --- */
+        /* --- LOVE GACHA STYLES (RECTANGULAR BOX FIXED) --- */
         #gacha-window { width: 450px; height: 600px; top: 10%; left: 35%; background: #2c3e50; color: white; font-family: 'Segoe UI', sans-serif; }
-        .gacha-stage { 
-            height: 250px; background: radial-gradient(circle, #34495e 0%, #2c3e50 100%); 
-            display: flex; align-items: center; justify-content: center; perspective: 1000px; position: relative; overflow: hidden;
-        }
+        .gacha-stage { height: 350px; background: radial-gradient(circle, #34495e 0%, #2c3e50 100%); display: flex; align-items: center; justify-content: center; perspective: 1000px; position: relative; overflow: hidden; }
         
-        /* 3D Cube */
-        .gacha-cube {
-            width: 100px; height: 100px; position: relative; transform-style: preserve-3d;
-            transition: transform 1s; cursor: pointer;
-        }
-        .gacha-face {
-            position: absolute; width: 100px; height: 100px; border: 2px solid #f1c40f;
-            background: rgba(255, 255, 255, 0.9); display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: #333; backface-visibility: hidden;
-        }
-        .gacha-face img { width: 100%; height: 100%; object-fit: cover; }
+        .gacha-cube { width: 100px; height: 150px; position: relative; transform-style: preserve-3d; transition: transform 1s; cursor: pointer; }
+        .gacha-face { position: absolute; border: 2px solid #f1c40f; background: rgba(255, 255, 255, 0.9); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #333; backface-visibility: hidden; background-size: cover; background-position: center; }
         
-        /* Cube Faces Positions (Assuming images are ./box_face.jpg) */
-        .face-front  { transform: rotateY(0deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
-        .face-back   { transform: rotateY(180deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
-        .face-right  { transform: rotateY(90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
-        .face-left   { transform: rotateY(-90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
-        .face-top    { transform: rotateX(90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
-        .face-bottom { transform: rotateX(-90deg) translateZ(50px); background: url('./box_face.jpg') center/cover; }
+        /* Sides (100x150) */
+        .face-front, .face-back, .face-right, .face-left { width: 100px; height: 150px; top: 0; left: 0; }
+        /* Top/Bottom (100x100) - FIX: Added top: 25px to center them vertically relative to the 150px height */
+        .face-top, .face-bottom { width: 100px; height: 100px; top: 25px; left: 0; }
+
+        /* Positioning & Images (FIXED: 75px translation for top/bottom because 150/2 = 75) */
+        .face-front  { transform: rotateY(0deg) translateZ(50px); background-image: url('./box_front.jpg'); }
+        .face-back   { transform: rotateY(180deg) translateZ(50px); background-image: url('./box_back.jpg'); }
+        .face-right  { transform: rotateY(90deg) translateZ(50px); background-image: url('./box_right.jpg'); }
+        .face-left   { transform: rotateY(-90deg) translateZ(50px); background-image: url('./box_left.jpg'); }
+        .face-top    { transform: rotateX(90deg) translateZ(75px); background-image: url('./box_top.jpg'); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(75px); background-image: url('./box_bottom.jpg'); }
 
         .spinning { animation: spinCube 2s infinite linear; }
         @keyframes spinCube { from { transform: rotateX(0deg) rotateY(0deg); } to { transform: rotateX(360deg) rotateY(360deg); } }
-
-        /* Controls */
+        
         .gacha-controls { padding: 15px; text-align: center; background: #ecf0f1; color: #333; }
-        .gacha-btn {
-            background: #e74c3c; color: white; border: none; padding: 10px 30px; border-radius: 25px;
-            font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px #c0392b; transition: all 0.1s;
-        }
-        .gacha-btn:active { transform: translateY(4px); box-shadow: 0 0 #c0392b; }
-        .gacha-btn:disabled { background: #95a5a6; box-shadow: none; cursor: not-allowed; }
-
-        /* Inventory */
+        .gacha-btn { background: #e74c3c; color: white; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px #c0392b; transition: all 0.1s; }
+        .gacha-btn:active { transform: translateY(4px); box-shadow: 0 0 #c0392b; } .gacha-btn:disabled { background: #95a5a6; box-shadow: none; cursor: not-allowed; }
         .inventory-area { flex: 1; background: #fff; padding: 10px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start; }
         .inv-item { width: 60px; height: 80px; background: #f9f9f9; border-radius: 5px; display: flex; flex-direction: column; align-items: center; padding: 2px; position: relative; border: 1px solid #ddd; }
         .inv-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
-        .inv-name { font-size: 9px; text-align: center; margin-top: 2px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        
-        /* Ranks */
-        .rank-white { border: 2px solid #bdc3c7; box-shadow: 0 0 5px #bdc3c7; }
-        .rank-blue { border: 2px solid #3498db; box-shadow: 0 0 5px #3498db; }
-        .rank-purple { border: 2px solid #9b59b6; box-shadow: 0 0 8px #9b59b6; }
-        .rank-gold { border: 2px solid #f1c40f; box-shadow: 0 0 10px #f1c40f; animation: glowGold 2s infinite; }
-        .rank-pink { border: 2px solid #ff69b4; box-shadow: 0 0 15px #ff69b4; animation: glowPink 1.5s infinite; }
-
+        .inv-name { font-size: 9px; text-align: center; margin-top: 2px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: black; }
+        .rank-white { border: 2px solid #bdc3c7; box-shadow: 0 0 5px #bdc3c7; } .rank-blue { border: 2px solid #3498db; box-shadow: 0 0 5px #3498db; } .rank-purple { border: 2px solid #9b59b6; box-shadow: 0 0 8px #9b59b6; } .rank-gold { border: 2px solid #f1c40f; box-shadow: 0 0 10px #f1c40f; animation: glowGold 2s infinite; } .rank-pink { border: 2px solid #ff69b4; box-shadow: 0 0 15px #ff69b4; animation: glowPink 1.5s infinite; }
         @keyframes glowGold { 0% { box-shadow: 0 0 5px #f1c40f; } 50% { box-shadow: 0 0 20px #f1c40f; } 100% { box-shadow: 0 0 5px #f1c40f; } }
         @keyframes glowPink { 0% { box-shadow: 0 0 5px #ff69b4; } 50% { box-shadow: 0 0 25px #ff1493; } 100% { box-shadow: 0 0 5px #ff69b4; } }
-
-        /* Admin Panel (Hidden) */
-        #gacha-admin {
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; padding: 20px; overflow-y: auto;
-        }
-        .admin-row { margin-bottom: 10px; }
-        .admin-row input, .admin-row select { width: 100%; padding: 5px; color: black; }
-        .admin-close { position: absolute; top: 10px; right: 10px; color: red; font-size: 20px; cursor: pointer; }
-
-        /* Reward Popup */
-        #reward-popup {
-            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 50; flex-direction: column; align-items: center; justify-content: center;
-            animation: popIn 0.3s;
-        }
+        #gacha-admin { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; padding: 20px; overflow-y: auto; }
+        .admin-row { margin-bottom: 10px; } .admin-row input, .admin-row select { width: 100%; padding: 5px; color: black; } .admin-close { position: absolute; top: 10px; right: 10px; color: red; font-size: 20px; cursor: pointer; }
+        #reward-popup { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 50; flex-direction: column; align-items: center; justify-content: center; animation: popIn 0.3s; }
         #reward-img { width: 150px; height: 150px; border-radius: 10px; margin-bottom: 15px; object-fit: cover; }
         #reward-name { font-size: 24px; font-weight: bold; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         #reward-desc { font-size: 14px; color: #ddd; max-width: 80%; text-align: center; margin-bottom: 20px; font-style: italic; }
-        .light-beam {
-            position: absolute; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.2) 20deg, transparent 40deg);
-            animation: rotateBeam 5s infinite linear; z-index: -1;
-        }
+        .light-beam { position: absolute; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent 0deg, rgba(255,255,255,0.2) 20deg, transparent 40deg); animation: rotateBeam 5s infinite linear; z-index: -1; }
         @keyframes rotateBeam { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Other Apps */
+        #secret-window { width: 90%; max-width: 600px; height: 70vh; top: 45%; left: 50%; transform: translate(-50%, -50%); } #secret-window .window-body { padding: 0; background: black; flex: 1; overflow-y: auto; } .terminal-content { padding: 15px; color: #00ff41; font-family: 'Fira Code', monospace; }
+        #snake-window { width: 320px; height: 380px; top: 20%; left: 20%; background: #222; } canvas { background: #000; border: 2px solid #555; display: block; margin: 0 auto; } .score-board { color: #0f0; font-family: 'Press Start 2P', cursive; font-size: 10px; text-align: center; padding: 5px; }
+        #notepad-window { width: 300px; height: 300px; top: 10%; right: 10%; } #notepad-window .window-body { padding: 0; display: flex; flex-direction: column; flex: 1; background: white; } .notepad-area { flex: 1; width: 100%; border: none; padding: 5px; font-family: 'Consolas', monospace; resize: none; outline: none; box-sizing: border-box; display: block; }
+        #calc-window { width: 220px; top: 40%; left: 60%; background: #ece9d8; } .calc-display { background: white; border: 1px solid #7f9db9; height: 30px; margin: 10px; text-align: right; padding: 5px; font-family: monospace; font-size: 16px; } .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; padding: 0 10px 10px 10px; } .calc-btn { height: 30px; font-size: 12px; cursor: pointer; border: 1px solid #fff; border-right-color: #000; border-bottom-color: #000; background: #f0f0f0; } .calc-btn:active { border-color: #000 #fff #fff #000; }
+        #winamp-window { width: 300px; height: auto; top: 60%; left: 10%; background: #222; border: 2px solid #555; border-radius: 0; color: #0f0; font-family: sans-serif; } .winamp-visualizer { height: 40px; background: #000; margin: 5px 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 2px; border: 1px inset #555; } .bar { width: 8px; background: #0f0; transition: height 0.1s; } .song-title-display { background: #000; color: #0f0; border: 1px solid #555; font-size: 11px; padding: 4px; width: 100%; font-family: monospace; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .winamp-btn { cursor: pointer; color: #bbb; transition: all 0.2s; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border: 1px solid #444; background: #333; border-radius: 50%; } .winamp-btn:hover { color: white; border-color: #888; background: #444; transform: scale(1.1); } .winamp-btn.active { transform: scale(0.9); } .winamp-btn.play-btn { color: #0f0; border-color: #060; } .winamp-btn.stop-btn { color: #f00; border-color: #600; }
+        #taskmgr-window { width: 400px; height: 450px; top: 20%; left: 30%; font-family: 'Tahoma', sans-serif; font-size: 11px; } .task-tabs { display: flex; padding: 2px 2px 0 2px; background: #ece9d8; border-bottom: 1px solid #888; } .task-tab { padding: 4px 10px; border: 1px solid #888; border-bottom: none; background: #ece9d8; border-radius: 3px 3px 0 0; margin-right: 2px; cursor: pointer; } .task-tab.active { background: white; font-weight: bold; position: relative; top: 1px; padding-bottom: 5px; } .task-body { background: white; padding: 10px; flex: 1; border: 1px solid #888; border-top: none; display: flex; flex-direction: column; } .cpu-graph-container { border: 2px solid #000; background: #000; height: 100px; position: relative; overflow: hidden; display: flex; align-items: flex-end; gap: 2px; } .cpu-bar { width: 5px; background: #0f0; } .process-list { border: 1px solid #888; flex: 1; overflow-y: auto; background: white; margin-bottom: 10px; } .process-header { display: flex; background: #ece9d8; border-bottom: 1px solid #888; font-weight: bold; padding: 2px; } .process-row { display: flex; padding: 2px; border-bottom: 1px dotted #ccc; } .process-row:hover { background: #316ac5; color: white; } .col-name { width: 60%; } .col-cpu { width: 20%; text-align: right; } .col-mem { width: 20%; text-align: right; }
+        #recycle-window { width: 400px; height: 300px; top: 20%; left: 20%; } .file-list { background: white; flex: 1; border: 1px solid #888; padding: 10px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; } .file-item { width: 60px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; } .file-item:hover { background-color: #e8f0ff; outline: 1px dotted #ccc; } .file-item i { font-size: 24px; color: #7f8c8d; margin-bottom: 2px; } .file-item span { font-size: 11px; word-break: break-all; line-height: 1.2; }
+        #paint-window { width: 500px; height: 400px; top: 15%; left: 25%; } .paint-toolbar { background: #ece9d8; padding: 5px; display: flex; gap: 5px; border-bottom: 1px solid #888; } .paint-tool { width: 24px; height: 24px; border: 1px solid #888; display: flex; align-items: center; justify-content: center; background: white; cursor: pointer; } .paint-canvas-container { flex: 1; background: #888; padding: 10px; overflow: auto; display: flex; justify-content: center; align-items: center; } canvas#paint-canvas { background: white; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); }
+        #cmd-window { width: 600px; height: 400px; top: 30%; left: 30%; background: black; } #cmd-content { color: #ccc; font-family: 'Consolas', monospace; font-size: 14px; padding: 5px; flex: 1; overflow-y: auto; } .cmd-line { margin-bottom: 2px; } .cmd-input { background: transparent; border: none; color: #ccc; font-family: inherit; font-size: inherit; width: 80%; outline: none; }
+        #mine-window { width: 250px; height: 300px; top: 40%; right: 20%; background: #c0c0c0; } .mine-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding: 10px; border: 3px inset #fff; background: #888; margin: 10px; } .mine-cell { width: 40px; height: 40px; background: #c0c0c0; border: 2px outset #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; } .mine-cell:active { border: 2px inset #fff; } .mine-cell.revealed { border: 1px solid #888; background: #c0c0c0; color: #e74c3c; }
+        #hardware-popup { position: absolute; bottom: 40px; right: 10px; width: 250px; background: #ffffe1; border: 1px solid #000; padding: 10px; display: none; flex-direction: column; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); z-index: 20000; font-family: 'Tahoma', sans-serif; font-size: 11px; animation: slideUp 0.5s ease-out; } @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } } .popup-header { font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; } .progress-bar-container { width: 100%; height: 10px; background: white; border: 1px solid #888; margin-top: 5px; } .progress-bar-fill { height: 100%; background: #000080; width: 0%; transition: width 3s linear; }
+        
+        /* Chrome Browser */
+        #chrome-window { width: 900px; height: 600px; top: 5%; left: 5%; background: #fff; font-family: 'Roboto', sans-serif; } .chrome-toolbar { background: #f1f3f4; padding: 8px; display: flex; align-items: center; border-bottom: 1px solid #e0e0e0; gap: 10px; flex-shrink: 0; } .chrome-url-bar { flex: 1; background: #fff; border: 1px solid #ccc; border-radius: 20px; padding: 5px 15px; font-size: 12px; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.1); } .chrome-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; } .chrome-view { width: 100%; height: 100%; display: flex; flex-direction: column; overflow-y: auto; background: white; } .hidden-view { display: none !important; }
+        .chrome-search-view { align-items: center; justify-content: center; padding: 20px; } .google-logo { font-size: 60px; font-weight: bold; margin-bottom: 20px; user-select: none; } .google-blue { color: #4285f4; } .google-red { color: #ea4335; } .google-yellow { color: #fbbc05; } .google-green { color: #34a853; } .search-box { width: 80%; max-width: 500px; border: 1px solid #dfe1e5; border-radius: 24px; padding: 12px 20px; display: flex; align-items: center; box-shadow: 0 1px 6px rgba(32,33,36,0.1); } .search-box input { border: none; outline: none; flex: 1; font-size: 16px; margin-left: 10px; } .search-btns { margin-top: 25px; display: flex; gap: 10px; } .search-btn { background: #f8f9fa; border: 1px solid #f8f9fa; padding: 8px 16px; border-radius: 4px; color: #3c4043; cursor: pointer; font-size: 14px; }
+        .chrome-results-view { align-items: flex-start; justify-content: flex-start; } .results-header { border-bottom: 1px solid #dfe1e5; w-full; padding: 15px; display: flex; items-center; gap: 20px; margin-bottom: 20px; } .results-content { padding: 0 20px 20px 20px; width: 100%; max-width: 800px; } .search-result-item { width: 100%; text-align: left; margin-bottom: 30px; animation: fadeIn 0.5s; } .result-url { color: #202124; font-size: 12px; margin-bottom: 2px; } .result-title { color: #1a0dab; font-size: 20px; cursor: pointer; text-decoration: none; display: block; margin-bottom: 4px; } .result-title:hover { text-decoration: underline; } .result-desc { color: #4d5156; font-size: 14px; line-height: 1.58; }
+        .chrome-youtube-view { background: #f9f9f9; } .yt-sidebar-item { padding: 10px 12px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 20px; font-size: 14px; color: #0f0f0f; } .yt-sidebar-item:hover { background-color: #f2f2f2; } .yt-sidebar-item i { width: 24px; font-size: 18px; text-align: center; } .yt-pill { background: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; } .yt-pill:hover { background: rgba(0,0,0,0.1); } .yt-comment-input { border-bottom: 1px solid #ccc; padding-bottom: 4px; width: 100%; font-size: 14px; outline: none; } .yt-comment-input:focus { border-bottom: 2px solid #000; }
+        .fake-player { width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; } .fake-player img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: opacity 0.3s; } .fake-player:hover img { opacity: 0.5; } .play-btn-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 68px; height: 48px; background: rgba(33, 33, 33, 0.8); border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; } .fake-player:hover .play-btn-overlay { background: #f00; } .play-triangle { width: 0; height: 0; border-style: solid; border-width: 10px 0 10px 18px; border-color: transparent transparent transparent #fff; }
+
+        .taskbar { position: absolute; bottom: 0; left: 0; width: 100%; height: 30px; background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 10%, #245edb 15%, #245edb 85%, #1941a5 100%); display: flex; align-items: center; z-index: 10000; border-top: 1px solid #5a9ce9; } .start-button { height: 30px; background: linear-gradient(to bottom, #388e3c 0%, #81c784 10%, #388e3c 20%, #2e7d32 80%, #1b5e20 100%); border-radius: 0 10px 10px 0; padding: 0 15px 0 5px; display: flex; align-items: center; color: white; font-style: italic; font-weight: bold; font-size: 15px; cursor: pointer; margin-right: 10px; border: 1px solid #145214; } .system-tray { margin-left: auto; background: linear-gradient(to bottom, #1c7bbd 0%, #0d96f1 10%, #1c7bbd 20%, #1c7bbd 80%, #11568d 100%); height: 100%; padding: 0 15px; display: flex; align-items: center; color: white; font-size: 11px; border-left: 1px solid #0f4e8b; }
+        .xp-button { padding: 4px 20px; background: #ece9d8; border: 1px solid #000; border-color: white #000 #000 white; font-size: 12px; cursor: pointer; } .xp-button:active { border-color: #000 white white #000; transform: translate(1px, 1px); } .hidden { display: none !important; } .heart { position: absolute; top: -50px; font-size: 20px; color: #ff3366; animation: fall linear forwards; z-index: 9998; pointer-events: none; } @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
-
-    <!-- BOOT SCREEN -->
-    <div id="boot-screen">
-        <div id="boot-text"></div>
-        <span class="cursor-blink">_</span>
-    </div>
-
-    <!-- GLITCH OVERLAY -->
+    <div id="boot-screen"><div id="boot-text"></div><span class="cursor-blink">_</span></div>
     <div id="glitch-overlay"></div>
-
-    <!-- BSOD -->
-    <div id="bsod">
-        <span style="background:white; color:blue; font-weight:bold;">Love_Exception</span>
-        <p class="mt-4">A fatal exception LOVE has occurred at 0904:2004.</p>
-        <p>The system has detected an overdose of affection.</p>
-        <p class="mt-4 text-yellow-300 blink">> Hệ thống phát hiện một đối tượng quá xinh đẹp đang truy cập.</p>
-        <p class="text-yellow-300 blink">> Trái tim của Admin (Phạm Chu Đồng) bị quá tải.</p>
-        <p class="text-yellow-300 blink">> Đang khởi động lại chế độ: Yêu thương vô điều kiện...</p>
-        <p class="mt-8">Technical Information:</p>
-        <p>*** STOP: 0x0000LOVE (MISS_YOU.EXE, HUG_ME.SYS)</p>
-        <p class="mt-4">Press any key to accept your fate...</p>
-    </div>
-
-    <!-- NIGHT MODE CANVAS -->
+    <div id="bsod"><span style="background:white; color:blue; font-weight:bold;">Love_Exception</span><p class="mt-4">A fatal exception LOVE has occurred at 0904:2004.</p><p>The system has detected an overdose of affection.</p><p class="mt-4 text-yellow-300 blink">> Hệ thống phát hiện một đối tượng quá xinh đẹp đang truy cập.</p><p class="text-yellow-300 blink">> Trái tim của Admin (Phạm Chu Đồng) bị quá tải.</p><p class="text-yellow-300 blink">> Đang khởi động lại chế độ: Yêu thương vô điều kiện...</p><p class="mt-8">Technical Information:</p><p>*** STOP: 0x0000LOVE (MISS_YOU.EXE, HUG_ME.SYS)</p><p class="mt-4">Press any key to accept your fate...</p></div>
     <canvas id="stars-canvas"></canvas>
+    <div id="hardware-popup"><div class="popup-header"><i class="fas fa-info-circle text-blue-600"></i> New Hardware Found</div><div>Bàn tay của em</div><div class="mt-2">Installing driver...</div><div class="progress-bar-container"><div class="progress-bar-fill" id="driver-progress"></div></div></div>
 
-    <!-- HARDWARE POPUP -->
-    <div id="hardware-popup">
-        <div class="popup-header"><i class="fas fa-info-circle text-blue-600"></i> New Hardware Found</div>
-        <div>Bàn tay của em</div>
-        <div class="mt-2">Installing driver...</div>
-        <div class="progress-bar-container"><div class="progress-bar-fill" id="driver-progress"></div></div>
-    </div>
-
-    <!-- DESKTOP -->
     <div id="desktop">
         <div class="icon-grid">
-            <div class="desktop-icon" onclick="openWindow('secret-window')">
-                <i class="fas fa-folder xp-icon icon-folder"></i>
-                <span class="font-bold text-yellow-200">CONFESSION</span>
+            <div class="desktop-icon" onclick="openWindow('secret-window')"><i class="fas fa-folder xp-icon icon-folder"></i><span class="font-bold text-yellow-200">CONFESSION</span></div>
+            <div class="desktop-icon" onclick="openWindow('gacha-window')"><i class="fas fa-gift xp-icon icon-box"></i><span>Love Box</span></div>
+            <div class="desktop-icon" onclick="openWindow('snake-window'); initSnake();"><i class="fas fa-gamepad xp-icon icon-game"></i><span>Rắn Săn Tình</span></div>
+            <div class="desktop-icon" onclick="openWindow('notepad-window')"><i class="fas fa-file-alt xp-icon icon-notepad"></i><span>Nhật Ký.txt</span></div>
+            <div class="desktop-icon" onclick="openWindow('chrome-window')"><div class="icon-chrome-bg xp-icon"><i class="fab fa-chrome icon-chrome"></i></div><span>Chrome</span></div>
+            <div class="desktop-icon" onclick="openWindow('taskmgr-window'); startTaskMgr();"><i class="fas fa-desktop xp-icon icon-taskmgr"></i><span>Task Manager</span></div>
+            <div class="desktop-icon" onclick="openWindow('recycle-window')"><i class="fas fa-trash-alt xp-icon icon-trash"></i><span>Recycle Bin</span></div>
+            <div class="desktop-icon" onclick="openWindow('paint-window'); startAutoDraw();"><i class="fas fa-paint-brush xp-icon icon-paint"></i><span>MS Paint</span></div>
+            <div class="desktop-icon" onclick="openWindow('cmd-window'); initCMD();"><i class="fas fa-terminal xp-icon icon-cmd"></i><span>Command Prompt</span></div>
+            <div class="desktop-icon" onclick="openWindow('mine-window'); initMines();"><i class="fas fa-bomb xp-icon icon-bomb"></i><span>Minesweeper</span></div>
+            <div class="desktop-icon" onclick="toggleNightMode()"><i class="fas fa-moon xp-icon icon-moon"></i><span>Night Mode</span></div>
+            <div class="desktop-icon" onclick="triggerGlitch()"><i class="fas fa-exclamation-triangle xp-icon icon-warning"></i><span>System Update</span></div>
+            <div class="desktop-icon" onclick="openWindow('winamp-window')"><i class="fas fa-music xp-icon icon-music"></i><span>Nhịp Tim</span></div>
+        </div>
+
+        <!-- Confession -->
+        <div id="secret-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'secret-window')"><div class="window-title"><i class="fas fa-terminal mr-2"></i> confession.exe</div><div class="win-btn-close" onclick="closeWindow('secret-window')"><i class="fas fa-times"></i></div></div><div class="window-body"><div class="terminal-content"><div id="typewriter-text" class="mb-6 whitespace-pre-wrap leading-relaxed"></div><div id="hidden-content" class="hidden flex flex-col items-center justify-center opacity-0 transition-opacity duration-1000 mt-4 pb-4"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1887&auto=format&fit=crop" class="w-48 border-4 border-white transform rotate-2 mb-4"><p class="text-center text-gray-400 text-xs font-mono mb-4">> Ngoại lệ chưa được xử lý...</p><div class="flex space-x-4"><button class="xp-button font-bold text-blue-600" onclick="acceptLove()">Đồng ý</button><button class="xp-button" onclick="alert('Nút này bị liệt rồi!')">Từ chối</button></div></div></div></div></div>
+
+        <!-- GACHA LOVE BOX -->
+        <div id="gacha-window" class="window">
+            <div class="window-header" onmousedown="startDrag(event, 'gacha-window')">
+                <div class="window-title">
+                    Cỗ Máy Tình Yêu (Love Box)
+                </div>
+                <div class="win-btn-close" onclick="closeWindow('gacha-window')"><i class="fas fa-times"></i></div>
             </div>
             
-            <div class="desktop-icon" onclick="openWindow('snake-window'); initSnake();">
-                <i class="fas fa-gamepad xp-icon icon-game"></i>
-                <span>Rắn Săn Tình</span>
-            </div>
-
-            <div class="desktop-icon" onclick="openWindow('notepad-window')">
-                <i class="fas fa-file-alt xp-icon icon-notepad"></i>
-                <span>Nhật Ký.txt</span>
-            </div>
-
-            <div class="desktop-icon" onclick="openWindow('chrome-window')">
-                <div class="icon-chrome-bg xp-icon"><i class="fab fa-chrome icon-chrome"></i></div>
-                <span>Chrome</span>
-            </div>
-
-            <div class="desktop-icon" onclick="openWindow('taskmgr-window'); startTaskMgr();">
-                <i class="fas fa-desktop xp-icon icon-taskmgr"></i>
-                <span>Task Manager</span>
-            </div>
-
-            <!-- NEW ICONS -->
-            <div class="desktop-icon" onclick="openWindow('recycle-window')">
-                <i class="fas fa-trash-alt xp-icon icon-trash"></i>
-                <span>Recycle Bin</span>
-            </div>
-
-            <div class="desktop-icon" onclick="openWindow('paint-window'); startAutoDraw();">
-                <i class="fas fa-paint-brush xp-icon icon-paint"></i>
-                <span>MS Paint</span>
-            </div>
-
-            <div class="desktop-icon" onclick="openWindow('cmd-window'); initCMD();">
-                <i class="fas fa-terminal xp-icon icon-cmd"></i>
-                <span>Command Prompt</span>
-            </div>
-
-            <div class="desktop-icon" onclick="openWindow('mine-window'); initMines();">
-                <i class="fas fa-bomb xp-icon icon-bomb"></i>
-                <span>Minesweeper</span>
-            </div>
-
-            <div class="desktop-icon" onclick="toggleNightMode()">
-                <i class="fas fa-moon xp-icon icon-moon"></i>
-                <span>Night Mode</span>
-            </div>
-
-            <div class="desktop-icon" onclick="triggerGlitch()">
-                <i class="fas fa-exclamation-triangle xp-icon icon-warning"></i>
-                <span>System Update</span>
-            </div>
-
-            <div class="desktop-icon" onclick="openWindow('winamp-window')">
-                <i class="fas fa-music xp-icon icon-music"></i>
-                <span>Nhịp Tim</span>
-            </div>
-
-            <!-- DÁN ĐOẠN NÀY VÀO ĐỂ HIỆN ICON LOVE BOX -->
-            <div class="desktop-icon" onclick="openWindow('gacha-window')">
-                <i class="fas fa-gift xp-icon icon-box"></i>
-                <span>Love Box</span>
-            </div>
-        </div>
-
-        <!-- WINDOWS -->
-        
-        <!-- 1. Confession -->
-        <div id="secret-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'secret-window')">
-                <div class="window-title"><i class="fas fa-terminal mr-2"></i> confession.exe</div>
-                <div class="win-btn-close" onclick="closeWindow('secret-window')"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="window-body">
-                <div class="terminal-content">
-                    <div id="typewriter-text" class="mb-6 whitespace-pre-wrap leading-relaxed"></div>
-                    <div id="hidden-content" class="hidden flex flex-col items-center justify-center opacity-0 transition-opacity duration-1000 mt-4 pb-4">
-                        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1887&auto=format&fit=crop" class="w-48 border-4 border-white transform rotate-2 mb-4">
-                        <p class="text-center text-gray-400 text-xs font-mono mb-4">> Ngoại lệ chưa được xử lý...</p>
-                        <div class="flex space-x-4">
-                            <button class="xp-button font-bold text-blue-600" onclick="acceptLove()">Đồng ý</button>
-                            <button class="xp-button" onclick="alert('Nút này bị liệt rồi!')">Từ chối</button>
-                        </div>
-                    </div>
+            <div class="gacha-stage">
+                <div class="gacha-cube" id="cube">
+                    <div class="gacha-face face-front"></div>
+                    <div class="gacha-face face-back"></div>
+                    <div class="gacha-face face-right"></div>
+                    <div class="gacha-face face-left"></div>
+                    <div class="gacha-face face-top"></div>
+                    <div class="gacha-face face-bottom"></div>
+                </div>
+                <div id="reward-popup">
+                    <div class="light-beam"></div>
+                    <img id="reward-img" src="" alt="Reward">
+                    <div id="reward-rank" class="uppercase text-xs font-bold tracking-widest mb-1">Rank</div>
+                    <div id="reward-name">Item Name</div>
+                    <div id="reward-desc">Description</div>
+                    <button class="gacha-btn" onclick="closeReward()">Nhận Quà</button>
                 </div>
             </div>
+            <div class="gacha-controls">
+                <div class="text-sm mb-2 font-bold text-gray-600">Lượt rút hôm nay: <span id="pull-count" class="text-red-600">3/3</span></div>
+                <button class="gacha-btn" id="pull-btn" onclick="startGacha()">RÚT THƯỞNG</button>
+            </div>
+            <div class="bg-gray-200 px-2 py-1 text-xs font-bold text-gray-500 border-t border-gray-300 flex justify-between items-center">
+                <span>Kho Đồ (Inventory)</span>
+                <!-- ICON CƠ CHẾ ẨN (Click 5 lần) -->
+                <i class="fas fa-gift text-yellow-500 cursor-pointer" onclick="triggerAdminGacha()" title="Secret"></i>
+            </div>
+            <div class="inventory-area" id="inventory-grid"></div>
+            <div id="gacha-admin">
+                <i class="fas fa-times admin-close" onclick="document.getElementById('gacha-admin').style.display='none'"></i>
+                <h2 class="text-xl font-bold mb-4 text-yellow-400 border-b pb-2">Admin God Mode</h2>
+                <div class="admin-row"><label>Tên:</label><input type="text" id="adm-name"></div>
+                <div class="admin-row"><label>Ảnh (./tenfile.jpg):</label><input type="text" id="adm-img"></div>
+                <div class="admin-row"><label>Rank:</label><select id="adm-rank"><option value="white">Trắng</option><option value="blue">Xanh</option><option value="purple">Tím</option><option value="gold">Vàng</option><option value="pink">Hồng</option></select></div>
+                <div class="admin-row"><label>Tỷ lệ:</label><input type="number" id="adm-rate"></div>
+                <div class="admin-row"><label>Mô tả:</label><input type="text" id="adm-desc"></div>
+                <button class="xp-button w-full font-bold" onclick="addGachaItem()">Thêm</button>
+                <div class="mt-4"><button class="bg-red-600 text-white px-2 py-1 text-xs rounded" onclick="resetGachaData()">Reset All</button></div>
+            </div>
+            <audio id="sfx-shake" src="./shake.mp3"></audio><audio id="sfx-open" src="./open.mp3"></audio>
         </div>
 
-        <!-- 2. Recycle Bin -->
-        <div id="recycle-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'recycle-window')">
-                <div class="window-title"><i class="fas fa-trash-alt mr-2"></i> Recycle Bin</div>
-                <div class="win-btn-close" onclick="closeWindow('recycle-window')"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="menu-bar">File &nbsp; Edit &nbsp; View &nbsp; Favorites &nbsp; Tools &nbsp; Help</div>
-            <div class="flex-1 flex flex-col bg-white overflow-hidden">
-                <div class="file-list" id="bin-files">
-                    <div class="file-item"><i class="fas fa-file-alt"></i><span>noi_buon.tmp</span></div>
-                    <div class="file-item"><i class="fas fa-file-excel"></i><span>gian_hon.log</span></div>
-                    <div class="file-item"><i class="fas fa-file-archive"></i><span>crush_cu.old</span></div>
-                    <div class="file-item"><i class="fas fa-image"></i><span>co_don.jpg</span></div>
-                </div>
-                <div class="p-2 border-t flex justify-between bg-[#ece9d8]">
-                    <div class="text-xs text-gray-500">4 objects</div>
-                    <button class="xp-button" onclick="emptyBin()">Empty Recycle Bin</button>
-                </div>
-            </div>
-        </div>
+        <!-- Recycle Bin -->
+        <div id="recycle-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'recycle-window')"><div class="window-title"><i class="fas fa-trash-alt mr-2"></i> Recycle Bin</div><div class="win-btn-close" onclick="closeWindow('recycle-window')"><i class="fas fa-times"></i></div></div><div class="menu-bar">File &nbsp; Edit &nbsp; View &nbsp; Favorites &nbsp; Tools &nbsp; Help</div><div class="flex-1 flex flex-col bg-white overflow-hidden"><div class="file-list" id="bin-files"><div class="file-item"><i class="fas fa-file-alt"></i><span>noi_buon.tmp</span></div><div class="file-item"><i class="fas fa-file-excel"></i><span>gian_hon.log</span></div><div class="file-item"><i class="fas fa-file-archive"></i><span>crush_cu.old</span></div><div class="file-item"><i class="fas fa-image"></i><span>co_don.jpg</span></div></div><div class="p-2 border-t flex justify-between bg-[#ece9d8]"><div class="text-xs text-gray-500">4 objects</div><button class="xp-button" onclick="emptyBin()">Empty Recycle Bin</button></div></div></div>
 
-        <!-- 3. MS Paint -->
-        <div id="paint-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'paint-window')">
-                <div class="window-title"><i class="fas fa-paint-brush mr-2"></i> untitled - Paint</div>
-                <div class="win-btn-close" onclick="closeWindow('paint-window')"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="menu-bar">File &nbsp; Edit &nbsp; View &nbsp; Image &nbsp; Colors &nbsp; Help</div>
-            <div class="paint-toolbar">
-                <div class="paint-tool"><i class="fas fa-pencil-alt text-xs"></i></div>
-                <div class="paint-tool"><i class="fas fa-fill-drip text-xs"></i></div>
-                <div class="paint-tool"><i class="fas fa-font text-xs"></i></div>
-            </div>
-            <div class="paint-canvas-container">
-                <canvas id="paint-canvas" width="400" height="300"></canvas>
-            </div>
-        </div>
+        <!-- MS Paint -->
+        <div id="paint-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'paint-window')"><div class="window-title"><i class="fas fa-paint-brush mr-2"></i> untitled - Paint</div><div class="win-btn-close" onclick="closeWindow('paint-window')"><i class="fas fa-times"></i></div></div><div class="menu-bar">File &nbsp; Edit &nbsp; View &nbsp; Image &nbsp; Colors &nbsp; Help</div><div class="paint-toolbar"><div class="paint-tool"><i class="fas fa-pencil-alt text-xs"></i></div><div class="paint-tool"><i class="fas fa-fill-drip text-xs"></i></div><div class="paint-tool"><i class="fas fa-font text-xs"></i></div></div><div class="paint-canvas-container"><canvas id="paint-canvas" width="400" height="300"></canvas></div></div>
 
-        <!-- 4. CMD -->
-        <div id="cmd-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'cmd-window')">
-                <div class="window-title"><i class="fas fa-terminal mr-2"></i> C:\WINDOWS\system32\cmd.exe</div>
-                <div class="win-btn-close" onclick="closeWindow('cmd-window')"><i class="fas fa-times"></i></div>
-            </div>
-            <div id="cmd-content" onclick="document.getElementById('cmd-input').focus()">
-                <div class="cmd-line">Microsoft Windows XP [Version 5.1.2600]</div>
-                <div class="cmd-line">(C) Copyright 1985-2001 Microsoft Corp.</div>
-                <div class="cmd-line">&nbsp;</div>
-                <div class="cmd-line">C:\Users\Dong> <input type="text" id="cmd-input" class="cmd-input" autocomplete="off"></div>
-            </div>
-        </div>
+        <!-- CMD -->
+        <div id="cmd-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'cmd-window')"><div class="window-title"><i class="fas fa-terminal mr-2"></i> C:\WINDOWS\system32\cmd.exe</div><div class="win-btn-close" onclick="closeWindow('cmd-window')"><i class="fas fa-times"></i></div></div><div id="cmd-content" onclick="document.getElementById('cmd-input').focus()"><div class="cmd-line">Microsoft Windows XP [Version 5.1.2600]</div><div class="cmd-line">(C) Copyright 1985-2001 Microsoft Corp.</div><div class="cmd-line">&nbsp;</div><div class="cmd-line">C:\Users\Dong> <input type="text" id="cmd-input" class="cmd-input" autocomplete="off"></div></div></div>
 
-        <!-- 5. Minesweeper (Safe Mode) -->
-        <div id="mine-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'mine-window')">
-                <div class="window-title"><i class="fas fa-bomb mr-2"></i> Minesweeper</div>
-                <div class="win-btn-close" onclick="closeWindow('mine-window')"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="menu-bar">Game &nbsp; Help</div>
-            <div class="flex-1 bg-[#c0c0c0] flex justify-center items-center">
-                <div class="mine-grid" id="mine-grid">
-                    <!-- JS generated -->
-                </div>
-            </div>
-        </div>
+        <!-- Minesweeper -->
+        <div id="mine-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'mine-window')"><div class="window-title"><i class="fas fa-bomb mr-2"></i> Minesweeper</div><div class="win-btn-close" onclick="closeWindow('mine-window')"><i class="fas fa-times"></i></div></div><div class="menu-bar">Game &nbsp; Help</div><div class="flex-1 bg-[#c0c0c0] flex justify-center items-center"><div class="mine-grid" id="mine-grid"></div></div></div>
 
-        <!-- 6. Task Manager -->
-        <div id="taskmgr-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'taskmgr-window')">
-                <div class="window-title"><i class="fas fa-desktop mr-2"></i> Windows Task Manager</div>
-                <div class="win-btn-close" onclick="closeWindow('taskmgr-window')"><i class="fas fa-times"></i></div>
-            </div>
-            <div class="task-tabs">
-                <div class="task-tab">Applications</div>
-                <div class="task-tab active">Processes</div>
-                <div class="task-tab">Performance</div>
-            </div>
-            <div class="task-body">
-                <div class="process-list">
-                    <div class="process-header"><div class="col-name">Image Name</div><div class="col-cpu">CPU</div><div class="col-mem">Mem Usage</div></div>
-                    <div class="process-row text-red-600 font-bold"><div class="col-name">Miss_You.exe</div><div class="col-cpu">99</div><div class="col-mem">1,024,000 K</div></div>
-                    <div class="process-row"><div class="col-name">Love.dll</div><div class="col-cpu">01</div><div class="col-mem">520,000 K</div></div>
-                    <div class="process-row"><div class="col-name">Thinking_Of_You.sys</div><div class="col-cpu">00</div><div class="col-mem">240,000 K</div></div>
-                    <div class="process-row text-gray-400"><div class="col-name">Hoc_Tap.exe (Not Responding)</div><div class="col-cpu">00</div><div class="col-mem">4,000 K</div></div>
-                </div>
-                <div class="mt-2 text-xs font-bold mb-1">CPU Usage History</div>
-                <div class="cpu-graph-container" id="cpu-graph"></div>
-                <div class="flex justify-between mt-1 text-xs"><span>CPU Usage: 100%</span><span>Processes: 4</span></div>
-            </div>
-        </div>
+        <!-- Task Manager -->
+        <div id="taskmgr-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'taskmgr-window')"><div class="window-title"><i class="fas fa-desktop mr-2"></i> Windows Task Manager</div><div class="win-btn-close" onclick="closeWindow('taskmgr-window')"><i class="fas fa-times"></i></div></div><div class="task-tabs"><div class="task-tab">Applications</div><div class="task-tab active">Processes</div><div class="task-tab">Performance</div></div><div class="task-body"><div class="process-list"><div class="process-header"><div class="col-name">Image Name</div><div class="col-cpu">CPU</div><div class="col-mem">Mem Usage</div></div><div class="process-row text-red-600 font-bold"><div class="col-name">Miss_You.exe</div><div class="col-cpu">99</div><div class="col-mem">1,024,000 K</div></div><div class="process-row"><div class="col-name">Love.dll</div><div class="col-cpu">01</div><div class="col-mem">520,000 K</div></div><div class="process-row"><div class="col-name">Thinking_Of_You.sys</div><div class="col-cpu">00</div><div class="col-mem">240,000 K</div></div><div class="process-row text-gray-400"><div class="col-name">Hoc_Tap.exe (Not Responding)</div><div class="col-cpu">00</div><div class="col-mem">4,000 K</div></div></div><div class="mt-2 text-xs font-bold mb-1">CPU Usage History</div><div class="cpu-graph-container" id="cpu-graph"></div><div class="flex justify-between mt-1 text-xs"><span>CPU Usage: 100%</span><span>Processes: 4</span></div></div></div>
 
         <!-- 7. Snake -->
-        <div id="snake-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'snake-window')"><div class="window-title">Rắn Săn Tình</div><div class="win-btn-close" onclick="closeWindow('snake-window')"><i class="fas fa-times"></i></div></div>
-            <div class="window-body bg-gray-800 flex flex-col items-center pt-2"><div class="score-board">TIM ĐÃ ĂN: <span id="score">0</span></div><canvas id="gameCanvas" width="280" height="280"></canvas><p class="text-xs text-gray-400 mt-2 font-mono">Dùng mũi tên để di chuyển</p></div>
-        </div>
+        <div id="snake-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'snake-window')"><div class="window-title">Rắn Săn Tình</div><div class="win-btn-close" onclick="closeWindow('snake-window')"><i class="fas fa-times"></i></div></div><div class="window-body bg-gray-800 flex flex-col items-center pt-2"><div class="score-board">TIM ĐÃ ĂN: <span id="score">0</span></div><canvas id="gameCanvas" width="280" height="280"></canvas><p class="text-xs text-gray-400 mt-2 font-mono">Dùng mũi tên để di chuyển</p></div></div>
 
         <!-- 8. Notepad -->
-        <div id="notepad-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'notepad-window')"><div class="window-title">Nhật Ký.txt - Notepad</div><div class="win-btn-close" onclick="closeWindow('notepad-window')"><i class="fas fa-times"></i></div></div>
-            <div class="menu-bar">File &nbsp; Edit &nbsp; Format &nbsp; View &nbsp; Help</div>
-            <div class="window-body"><textarea class="notepad-area">Ngày... tháng... năm...&#10;&#10;Gửi cậu, người chiếm 99% CPU của tớ.&#10;&#10;Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nhất đến trái tim cậu. Nhưng tớ nhận ra, biến số "nụ cười" của cậu làm tớ bị Stack Overflow mất rồi.&#10;&#10;Đồng.</textarea></div>
-        </div>
+        <div id="notepad-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'notepad-window')"><div class="window-title">Nhật Ký.txt - Notepad</div><div class="win-btn-close" onclick="closeWindow('notepad-window')"><i class="fas fa-times"></i></div></div><div class="menu-bar">File &nbsp; Edit &nbsp; Format &nbsp; View &nbsp; Help</div><div class="window-body"><textarea class="notepad-area">Ngày... tháng... năm...&#10;&#10;Gửi cậu, người chiếm 99% CPU của tớ.&#10;&#10;Tớ định viết một thuật toán tối ưu hóa đường đi ngắn nhất đến trái tim cậu. Nhưng tớ nhận ra, biến số "nụ cười" của cậu làm tớ bị Stack Overflow mất rồi.&#10;&#10;Đồng.</textarea></div></div>
 
         <!-- 9. Chrome -->
-        <div id="chrome-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'chrome-window')"><div class="window-title">Google Chrome</div><div class="win-btn-close" onclick="closeWindow('chrome-window')"><i class="fas fa-times"></i></div></div>
-            <div class="chrome-toolbar">
-                <i class="fas fa-arrow-left text-gray-500 cursor-pointer" onclick="goHome()"></i><i class="fas fa-arrow-right text-gray-500"></i><i class="fas fa-redo text-gray-500 cursor-pointer" onclick="goHome()"></i>
-                <div class="chrome-url-bar" id="chrome-url">https://www.google.com</div>
-            </div>
-            <div class="chrome-body">
-                <div class="chrome-view chrome-search-view" id="view-search">
-                    <div class="google-logo"><span class="google-blue">G</span><span class="google-red">o</span><span class="google-yellow">o</span><span class="google-blue">g</span><span class="google-green">l</span><span class="google-red">e</span></div>
-                    <div class="search-box"><i class="fas fa-search text-gray-400"></i><input type="text" id="google-input" placeholder="Tìm kiếm trên Google" onkeydown="if(event.key === 'Enter') doGoogleSearch()"><i class="fas fa-microphone text-blue-500 cursor-pointer"></i></div>
-                    <div class="search-btns"><button class="search-btn" onclick="doGoogleSearch()">Tìm với Google</button><button class="search-btn" onclick="alert('Đang cảm thấy may mắn vì có Đồng!')">Xem trang đầu tiên</button></div>
-                    <div class="mt-8 flex gap-4 text-xs text-gray-500"><div onclick="openYouTube()" class="flex items-center gap-1 hover:text-red-500 cursor-pointer text-gray-600 px-3 py-2 bg-gray-100 rounded-full"><i class="fab fa-youtube text-red-600 text-lg"></i> YouTube</div></div>
-                </div>
-                <div class="chrome-view chrome-results-view hidden-view" id="view-results">
-                    <div class="results-header">
-                         <div class="google-logo" style="font-size: 24px; margin:0; cursor:pointer;" onclick="goHome()"><span class="google-blue">G</span><span class="google-red">o</span><span class="google-yellow">o</span><span class="google-blue">g</span><span class="google-green">l</span><span class="google-red">e</span></div>
-                        <div class="flex-1 border rounded-full px-4 py-2 shadow-sm text-sm flex items-center"><span id="result-bar-text" class="flex-1">...</span><i class="fas fa-search text-blue-500 cursor-pointer"></i></div>
-                    </div>
-                    <div class="results-content">
-                        <div class="text-gray-500 text-xs mb-4">Khoảng 1 kết quả (0.0904 giây)</div>
-                        <div class="search-result-item">
-                            <div class="result-url">https://profile.pham-chu-dong.vn > thong-tin-chi-tiet</div>
-                            <div class="result-title text-blue-800 hover:underline">Phạm Chu Đồng - Hồ sơ bạn trai lý tưởng</div>
-                            <div class="result-desc"><b>Họ tên:</b> Phạm Chu Đồng<br><b>Sinh ngày:</b> 09/04/2004 (Cung Bạch Dương)<br><b>Thân hình:</b> Cao 1m77, nặng 70kg<br><b>Học vấn:</b> SV Tự động hóa - ĐH Mở Hà Nội.<br><b>Sở thích:</b> Màu xanh dương và yêu em.<br><b>Tình trạng:</b> Đang chờ người yêu accept lời tỏ tình.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="chrome-view chrome-youtube-view hidden-view" id="view-youtube">
-                    <!-- YouTube Header -->
-                    <div class="bg-white px-4 py-2 flex items-center justify-between border-b border-gray-200">
-                        <div class="flex items-center gap-4">
-                            <i class="fas fa-bars text-gray-600 text-lg cursor-pointer"></i>
-                            <div class="flex items-center gap-1 cursor-pointer" onclick="goHome()">
-                                <i class="fab fa-youtube text-red-600 text-2xl"></i>
-                                <span class="font-bold text-lg tracking-tighter relative -top-[1px]">YouTube</span>
-                                <span class="text-[10px] text-gray-500 relative -top-2">VN</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 flex-1 justify-center max-w-2xl">
-                            <div class="flex w-full">
-                                <input type="text" placeholder="Tìm kiếm" class="border border-gray-300 rounded-l-full px-4 py-1 w-full text-sm focus:border-blue-500 outline-none">
-                                <button class="bg-gray-100 border border-l-0 border-gray-300 rounded-r-full px-4 py-1 hover:bg-gray-200">
-                                    <i class="fas fa-search text-gray-600"></i>
-                                </button>
-                            </div>
-                            <div class="bg-gray-100 p-2 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200">
-                                <i class="fas fa-microphone text-gray-800"></i>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <i class="fas fa-video text-gray-600 text-lg cursor-pointer"></i>
-                            <i class="fas fa-bell text-gray-600 text-lg cursor-pointer"></i>
-                            <div class="w-8 h-8 bg-purple-600 rounded-full text-white flex items-center justify-center font-bold text-sm cursor-pointer">Đ</div>
-                        </div>
-                    </div>
-
-                    <!-- YouTube Content -->
-                    <div class="flex flex-1 overflow-hidden bg-[#f9f9f9]">
-                        <!-- Sidebar -->
-                        <div class="w-[200px] bg-white overflow-y-auto p-2 hidden md:block border-r border-gray-100">
-                            <div class="flex flex-col gap-1">
-                                <div class="yt-sidebar-item bg-gray-100 font-medium"><i class="fas fa-home"></i> <span>Trang chủ</span></div>
-                                <div class="yt-sidebar-item"><i class="fas fa-bolt"></i> <span>Shorts</span></div>
-                                <div class="yt-sidebar-item"><i class="fas fa-photo-video"></i> <span>Kênh đăng ký</span></div>
-                                <hr class="my-2 border-gray-200">
-                                <div class="px-3 py-2 font-bold text-sm">Bạn ></div>
-                                <div class="yt-sidebar-item"><i class="fas fa-history"></i> <span>Video đã xem</span></div>
-                                <div class="yt-sidebar-item"><i class="fas fa-clock"></i> <span>Xem sau</span></div>
-                                <div class="yt-sidebar-item"><i class="fas fa-thumbs-up"></i> <span>Video đã thích</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Main Video Area -->
-                        <div class="flex-1 p-6 overflow-y-auto">
-                            <div class="flex flex-col lg:flex-row gap-6">
-                                <!-- Main Player + Info + Comments -->
-                                <div class="flex-1">
-                                    <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative group" id="video-container">
-                                        <!-- Player loaded via JS -->
-                                        <div class="fake-player" onclick="loadRealVideo()">
-                                            <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
-                                            <div class="play-btn-overlay">
-                                                <div class="play-triangle"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mt-4">
-                                        <h1 class="text-xl font-bold line-clamp-2" id="yt-video-title">'bao tiền một mớ bình yên?' - 14 Casper & Bon Nghiêm (Official) (Track 09 - Album 'SỐ KHÔNG')</h1>
-                                        
-                                        <!-- Channel & Actions -->
-                                        <div class="flex items-center justify-between mt-2 flex-wrap gap-2">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center">
-                                                    <i class="fas fa-music text-gray-500"></i>
-                                                </div>
-                                                <div>
-                                                    <div class="font-bold text-sm">Bon Nghiêm Official  <i class="fas fa-check-circle text-gray-500 text-xs"></i></div>
-                                                    <div class="text-xs text-gray-500">10M người đăng ký</div>
-                                                </div>
-                                                <button class="bg-black text-white px-4 py-2 rounded-full text-sm font-bold ml-4 hover:bg-gray-800 transition">Đăng ký</button>
-                                            </div>
-                                            <div class="flex items-center gap-2">
-                                                <div class="flex items-center bg-gray-100 rounded-full overflow-hidden">
-                                                    <button class="px-3 py-2 text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition border-r border-gray-300"><i class="far fa-thumbs-up"></i> 999K</button>
-                                                    <button class="px-3 py-2 text-sm font-bold hover:bg-gray-200 transition"><i class="far fa-thumbs-down"></i></button>
-                                                </div>
-                                                <button class="bg-gray-100 px-3 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition"><i class="fas fa-share"></i> Chia sẻ</button>
-                                                <button class="bg-gray-100 px-3 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition"><i class="fas fa-download"></i> Tải xuống</button>
-                                                <button class="bg-gray-100 w-9 h-9 rounded-full flex items-center justify-center font-bold hover:bg-gray-200 transition">...</button>
-                                            </div>
-                                        </div>
-
-                                        <!-- Description -->
-                                        <div class="bg-gray-100 rounded-xl p-3 mt-4 text-sm hover:bg-gray-200 cursor-pointer transition">
-                                            <div class="flex gap-2 font-bold text-gray-800">
-                                                <span>100M lượt xem</span>
-                                                <span>2 giờ trước</span>
-                                                <span class="text-gray-500">#bonnghiem #baotienmotmobinhyen #phamchudong #colen</span>
-                                            </div>
-                                            <p class="mt-2 text-gray-800">
-                                                MV dành tặng cho người đặc biệt của Phạm Chu Đồng. Đồng yêu em!!! <br>
-                                                <span class="font-bold text-gray-600">thêm</span>
-                                            </p>
-                                        </div>
-
-                                        <!-- Comments Section (NEW) -->
-                                        <div class="mt-6">
-                                            <div class="flex items-center gap-8 mb-4">
-                                                <span class="font-bold text-xl">105 bình luận</span>
-                                                <div class="flex items-center gap-2 cursor-pointer font-medium text-sm"><i class="fas fa-sort-amount-down"></i> Sắp xếp theo</div>
-                                            </div>
-                                            
-                                            <!-- Add Comment -->
-                                            <div class="flex gap-3 mb-6">
-                                                <div class="w-10 h-10 bg-purple-600 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">Đ</div>
-                                                <div class="flex-1">
-                                                    <input type="text" placeholder="Viết bình luận..." class="yt-comment-input bg-transparent">
-                                                    <div class="flex justify-end gap-2 mt-2">
-                                                        <button class="px-3 py-1.5 text-sm font-medium rounded-full hover:bg-gray-200">Hủy</button>
-                                                        <button class="px-3 py-1.5 text-sm font-medium rounded-full bg-gray-200 text-gray-500">Bình luận</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Comment 1 -->
-                                            <div class="flex gap-3 mb-4">
-                                                <div class="w-10 h-10 bg-blue-500 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">P</div>
-                                                <div>
-                                                    <div class="flex items-center gap-2 text-xs">
-                                                        <span class="font-bold text-[13px]">Phạm Chu Đồng</span>
-                                                        <span class="text-gray-500">1 phút trước</span>
-                                                    </div>
-                                                    <div class="text-sm mt-1">Em bé ơi, cố lên nha ❤️</div>
-                                                    <div class="flex items-center gap-4 mt-1 text-gray-500 text-xs">
-                                                        <div class="flex items-center gap-1 cursor-pointer"><i class="far fa-thumbs-up"></i> 1K</div>
-                                                        <div class="cursor-pointer"><i class="far fa-thumbs-down"></i></div>
-                                                        <span class="font-bold cursor-pointer hover:bg-gray-200 px-2 py-1 rounded-full">Phản hồi</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Comment 2 -->
-                                            <div class="flex gap-3 mb-4">
-                                                <div class="w-10 h-10 bg-green-500 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">Đ</div>
-                                                <div>
-                                                    <div class="flex items-center gap-2 text-xs">
-                                                        <span class="font-bold text-[13px]">Đồng Phạm Chu</span>
-                                                        <span class="text-gray-500">5 phút trước</span>
-                                                    </div>
-                                                    <div class="text-sm mt-1">Yêu em bé rất nhìu!!! </div>
-                                                    <div class="flex items-center gap-4 mt-1 text-gray-500 text-xs">
-                                                        <div class="flex items-center gap-1 cursor-pointer"><i class="far fa-thumbs-up"></i> 256</div>
-                                                        <div class="cursor-pointer"><i class="far fa-thumbs-down"></i></div>
-                                                        <span class="font-bold cursor-pointer hover:bg-gray-200 px-2 py-1 rounded-full">Phản hồi</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Comment 2 -->
-                                            <div class="flex gap-3 mb-4">
-                                                <div class="w-10 h-10 bg-green-500 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">C</div>
-                                                <div>
-                                                    <div class="flex items-center gap-2 text-xs">
-                                                        <span class="font-bold text-[13px]">Chu Phạm Đồng</span>
-                                                        <span class="text-gray-500">5 phút trước</span>
-                                                    </div>
-                                                    <div class="text-sm mt-1">Có gì kể với anh nha !!!</div>
-                                                    <div class="flex items-center gap-4 mt-1 text-gray-500 text-xs">
-                                                        <div class="flex items-center gap-1 cursor-pointer"><i class="far fa-thumbs-up"></i> 3k</div>
-                                                        <div class="cursor-pointer"><i class="far fa-thumbs-down"></i></div>
-                                                        <span class="font-bold cursor-pointer hover:bg-gray-200 px-2 py-1 rounded-full">Phản hồi</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Comment 2 -->
-                                            <div class="flex gap-3 mb-4">
-                                                <div class="w-10 h-10 bg-green-500 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">C</div>
-                                                <div>
-                                                    <div class="flex items-center gap-2 text-xs">
-                                                        <span class="font-bold text-[13px]">Clone của Phạm Chu Đồng</span>
-                                                        <span class="text-gray-500">5 phút trước</span>
-                                                    </div>
-                                                    <div class="text-sm mt-1">Ăn uống phải đầy đủ vào đó!!!</div>
-                                                    <div class="flex items-center gap-4 mt-1 text-gray-500 text-xs">
-                                                        <div class="flex items-center gap-1 cursor-pointer"><i class="far fa-thumbs-up"></i> 1,5k</div>
-                                                        <div class="cursor-pointer"><i class="far fa-thumbs-down"></i></div>
-                                                        <span class="font-bold cursor-pointer hover:bg-gray-200 px-2 py-1 rounded-full">Phản hồi</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Recommended -->
-                                <div class="w-full lg:w-[350px] flex flex-col gap-3">
-                                    <div class="flex gap-2">
-                                        <button class="yt-pill bg-black text-white">Tất cả</button>
-                                        <button class="yt-pill">Dành cho bạn</button>
-                                        <button class="yt-pill">Phạm Chu Đồng</button>
-                                    </div>
-                                    
-                                    <div class="flex gap-2 cursor-pointer group">
-                                        <div class="w-[168px] h-[94px] bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden relative">
-                                            <img src="https://img.youtube.com/vi/S7ElVoYZN0g/mqdefault.jpg" class="w-full h-full object-cover group-hover:rounded-none transition-all">
-                                            <span class="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-[10px] px-1 rounded font-medium">3:45</span>
-                                        </div>
-                                        <div class="flex flex-col gap-1">
-                                            <h3 class="font-bold text-sm line-clamp-2 leading-tight">Top 10 sự thật về Phạm Chu Đồng mà bạn chưa biết</h3>
-                                            <div class="text-xs text-gray-500">Fact Vui <i class="fas fa-check-circle text-[10px]"></i></div>
-                                            <div class="text-xs text-gray-500">100K lượt xem • 2 giờ trước</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex gap-2 cursor-pointer group">
-                                        <div class="w-[168px] h-[94px] bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden relative">
-                                            <img src="https://img.youtube.com/vi/7wtfhZwyrcc/mqdefault.jpg" class="w-full h-full object-cover group-hover:rounded-none transition-all">
-                                            <span class="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-[10px] px-1 rounded font-medium">10:02</span>
-                                        </div>
-                                        <div class="flex flex-col gap-1">
-                                            <h3 class="font-bold text-sm line-clamp-2 leading-tight">Trang có yêu Đồng không?</h3>
-                                            <div class="text-xs text-gray-500">Phạm Chu Đồng <i class="fas fa-check-circle text-[10px]"></i></div>
-                                            <div class="text-xs text-gray-500">0 lượt xem • vừa xong</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex gap-2 cursor-pointer group">
-                                        <div class="w-[168px] h-[94px] bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden relative">
-                                            <img src="https://img.youtube.com/vi/jfKfPfyJRdk/mqdefault.jpg" class="w-full h-full object-cover group-hover:rounded-none transition-all">
-                                            <span class="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-[10px] px-1 rounded font-medium">LIVE</span>
-                                        </div>
-                                        <div class="flex flex-col gap-1">
-                                            <h3 class="font-bold text-sm line-clamp-2 leading-tight">Chắc là có ha </h3>
-                                            <div class="text-xs text-gray-500">Phạm Chu Đồng <i class="fas fa-check-circle text-[10px]"></i></div>
-                                            <div class="text-xs text-gray-500">0 lượt xem • vừa xong</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="chrome-window" class="window"><div class="window-header" onmousedown="startDrag(event, 'chrome-window')"><div class="window-title">Google Chrome</div><div class="win-btn-close" onclick="closeWindow('chrome-window')"><i class="fas fa-times"></i></div></div><div class="chrome-toolbar"><i class="fas fa-arrow-left text-gray-500 cursor-pointer" onclick="goHome()"></i><i class="fas fa-arrow-right text-gray-500"></i><i class="fas fa-redo text-gray-500 cursor-pointer" onclick="goHome()"></i><div class="chrome-url-bar" id="chrome-url">https://www.google.com</div></div><div class="chrome-body"><div class="chrome-view chrome-search-view" id="view-search"><div class="google-logo"><span class="google-blue">G</span><span class="google-red">o</span><span class="google-yellow">o</span><span class="google-blue">g</span><span class="google-green">l</span><span class="google-red">e</span></div><div class="search-box"><i class="fas fa-search text-gray-400"></i><input type="text" id="google-input" placeholder="Tìm kiếm trên Google" onkeydown="if(event.key === 'Enter') doGoogleSearch()"><i class="fas fa-microphone text-blue-500 cursor-pointer"></i></div><div class="search-btns"><button class="search-btn" onclick="doGoogleSearch()">Tìm với Google</button><button class="search-btn" onclick="alert('Đang cảm thấy may mắn vì có Đồng!')">Xem trang đầu tiên</button></div><div class="mt-8 flex gap-4 text-xs text-gray-500"><div onclick="openYouTube()" class="flex items-center gap-1 hover:text-red-500 cursor-pointer text-gray-600 px-3 py-2 bg-gray-100 rounded-full"><i class="fab fa-youtube text-red-600 text-lg"></i> YouTube</div></div></div><div class="chrome-view chrome-results-view hidden-view" id="view-results"><div class="results-header"><div class="google-logo" style="font-size: 24px; margin:0; cursor:pointer;" onclick="goHome()"><span class="google-blue">G</span><span class="google-red">o</span><span class="google-yellow">o</span><span class="google-blue">g</span><span class="google-green">l</span><span class="google-red">e</span></div><div class="flex-1 border rounded-full px-4 py-2 shadow-sm text-sm flex items-center"><span id="result-bar-text" class="flex-1">...</span><i class="fas fa-search text-blue-500 cursor-pointer"></i></div></div><div class="results-content"><div class="text-gray-500 text-xs mb-4">Khoảng 1 kết quả (0.0904 giây)</div><div class="search-result-item"><div class="result-url">https://profile.pham-chu-dong.vn > thong-tin-chi-tiet</div><div class="result-title text-blue-800 hover:underline">Phạm Chu Đồng - Hồ sơ bạn trai lý tưởng</div><div class="result-desc"><b>Họ tên:</b> Phạm Chu Đồng<br><b>Sinh ngày:</b> 09/04/2004 (Cung Bạch Dương)<br><b>Thân hình:</b> Cao 1m77, nặng 70kg<br><b>Học vấn:</b> SV Tự động hóa - ĐH Mở Hà Nội.<br><b>Sở thích:</b> Màu xanh dương và yêu em.<br><b>Tình trạng:</b> Đang chờ người yêu accept lời tỏ tình.</div></div></div></div><div class="chrome-view chrome-youtube-view hidden-view" id="view-youtube"><div class="bg-white px-4 py-2 flex items-center justify-between border-b border-gray-200"><div class="flex items-center gap-4"><i class="fas fa-bars text-gray-600 text-lg cursor-pointer"></i><div class="flex items-center gap-1 cursor-pointer" onclick="goHome()"><i class="fab fa-youtube text-red-600 text-2xl"></i><span class="font-bold text-lg tracking-tighter relative -top-[1px]">YouTube</span><span class="text-[10px] text-gray-500 relative -top-2">VN</span></div></div><div class="flex items-center gap-4 flex-1 justify-center max-w-2xl"><div class="flex w-full"><input type="text" placeholder="Tìm kiếm" class="border border-gray-300 rounded-l-full px-4 py-1 w-full text-sm focus:border-blue-500 outline-none"><button class="bg-gray-100 border border-l-0 border-gray-300 rounded-r-full px-4 py-1 hover:bg-gray-200"><i class="fas fa-search text-gray-600"></i></button></div></div><div class="flex items-center gap-4"><i class="fas fa-video text-gray-600 text-lg cursor-pointer"></i><i class="fas fa-bell text-gray-600 text-lg cursor-pointer"></i><div class="w-8 h-8 bg-purple-600 rounded-full text-white flex items-center justify-center font-bold text-sm cursor-pointer">Đ</div></div></div><div class="flex flex-1 overflow-hidden"><div class="w-[200px] bg-white overflow-y-auto p-2 hidden md:block border-r border-gray-100"><div class="flex flex-col gap-1"><div class="yt-sidebar-item bg-gray-100 font-medium"><i class="fas fa-home"></i> <span>Trang chủ</span></div><div class="yt-sidebar-item"><i class="fas fa-bolt"></i> <span>Shorts</span></div></div></div><div class="flex-1 bg-[#f9f9f9] p-6 overflow-y-auto"><div class="flex flex-col lg:flex-row gap-6"><div class="flex-1"><div class="aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative group" id="video-container"><div class="fake-player" onclick="loadRealVideo()"><img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail"><div class="play-btn-overlay"><div class="play-triangle"></div></div></div></div><div class="mt-4"><h1 class="text-xl font-bold line-clamp-2" id="yt-video-title">'bao tiền một mớ bình yên?' - 14 Casper & Bon Nghiêm (Official) (Track 09 - Album 'SỐ KHÔNG')</h1><div class="flex items-center justify-between mt-2 flex-wrap gap-2"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center"><i class="fas fa-music text-gray-500"></i></div><div><div class="font-bold text-sm">Bon Nghiêm Official  <i class="fas fa-check-circle text-gray-500 text-xs"></i></div><div class="text-xs text-gray-500">10M người đăng ký</div></div><button class="bg-black text-white px-4 py-2 rounded-full text-sm font-bold ml-4 hover:bg-gray-800 transition">Đăng ký</button></div><div class="flex items-center gap-2"><div class="flex items-center bg-gray-100 rounded-full overflow-hidden"><button class="px-3 py-2 text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition border-r border-gray-300"><i class="far fa-thumbs-up"></i> 999K</button><button class="px-3 py-2 text-sm font-bold hover:bg-gray-200 transition"><i class="far fa-thumbs-down"></i></button></div><button class="bg-gray-100 px-3 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition"><i class="fas fa-share"></i> Chia sẻ</button><button class="bg-gray-100 px-3 py-2 rounded-full text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition"><i class="fas fa-download"></i> Tải xuống</button><button class="bg-gray-100 w-9 h-9 rounded-full flex items-center justify-center font-bold hover:bg-gray-200 transition">...</button></div></div><div class="bg-gray-100 rounded-xl p-3 mt-4 text-sm hover:bg-gray-200 cursor-pointer transition"><div class="flex gap-2 font-bold text-gray-800"><span>100M lượt xem</span><span>2 giờ trước</span><span class="text-gray-500">#bonnghiem #baotienmotmobinhyen #phamchudong #colen</span></div><p class="mt-2 text-gray-800">MV dành tặng cho người đặc biệt của Phạm Chu Đồng. Đồng yêu em!!! <br><span class="font-bold text-gray-600">thêm</span></p></div><div class="mt-6"><div class="flex items-center gap-8 mb-4"><span class="font-bold text-xl">105 bình luận</span><div class="flex items-center gap-2 cursor-pointer font-medium text-sm"><i class="fas fa-sort-amount-down"></i> Sắp xếp theo</div></div><div class="flex gap-3 mb-6"><div class="w-10 h-10 bg-purple-600 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">Đ</div><div class="flex-1"><input type="text" placeholder="Viết bình luận..." class="yt-comment-input bg-transparent"><div class="flex justify-end gap-2 mt-2"><button class="px-3 py-1.5 text-sm font-medium rounded-full hover:bg-gray-200">Hủy</button><button class="px-3 py-1.5 text-sm font-medium rounded-full bg-gray-200 text-gray-500">Bình luận</button></div></div></div><div class="flex gap-3 mb-4"><div class="w-10 h-10 bg-blue-500 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">P</div><div><div class="flex items-center gap-2 text-xs"><span class="font-bold text-[13px]">Phạm Chu Đồng</span><span class="text-gray-500">1 phút trước</span></div><div class="text-sm mt-1">Em bé ơi, cố lên nha ❤️</div><div class="flex items-center gap-4 mt-1 text-gray-500 text-xs"><div class="flex items-center gap-1 cursor-pointer"><i class="far fa-thumbs-up"></i> 1K</div><div class="cursor-pointer"><i class="far fa-thumbs-down"></i></div><span class="font-bold cursor-pointer hover:bg-gray-200 px-2 py-1 rounded-full">Phản hồi</span></div></div></div><div class="flex gap-3 mb-4"><div class="w-10 h-10 bg-green-500 rounded-full text-white flex-shrink-0 flex items-center justify-center font-bold">Đ</div><div><div class="flex items-center gap-2 text-xs"><span class="font-bold text-[13px]">Đồng Phạm Chu</span><span class="text-gray-500">5 phút trước</span></div><div class="text-sm mt-1">Yêu em bé rất nhìu!!! </div><div class="flex items-center gap-4 mt-1 text-gray-500 text-xs"><div class="flex items-center gap-1 cursor-pointer"><i class="far fa-thumbs-up"></i> 256</div><div class="cursor-pointer"><i class="far fa-thumbs-down"></i></div><span class="font-bold cursor-pointer hover:bg-gray-200 px-2 py-1 rounded-full">Phản hồi</span></div></div></div></div></div></div><div class="w-full lg:w-[350px] flex flex-col gap-3"><div class="flex gap-2"><button class="yt-pill bg-black text-white">Tất cả</button><button class="yt-pill">Dành cho bạn</button><button class="yt-pill">Phạm Chu Đồng</button></div><div class="flex gap-2 cursor-pointer group"><div class="w-[168px] h-[94px] bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden relative"><img src="https://img.youtube.com/vi/S7ElVoYZN0g/mqdefault.jpg" class="w-full h-full object-cover group-hover:rounded-none transition-all"><span class="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-[10px] px-1 rounded font-medium">3:45</span></div><div class="flex flex-col gap-1"><h3 class="font-bold text-sm line-clamp-2 leading-tight">Top 10 sự thật về Phạm Chu Đồng mà bạn chưa biết</h3><div class="text-xs text-gray-500">Fact Vui <i class="fas fa-check-circle text-[10px]"></i></div><div class="text-xs text-gray-500">100K lượt xem • 2 giờ trước</div></div></div><div class="flex gap-2 cursor-pointer group"><div class="w-[168px] h-[94px] bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden relative"><img src="https://img.youtube.com/vi/7wtfhZwyrcc/mqdefault.jpg" class="w-full h-full object-cover group-hover:rounded-none transition-all"><span class="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-[10px] px-1 rounded font-medium">10:02</span></div><div class="flex flex-col gap-1"><h3 class="font-bold text-sm line-clamp-2 leading-tight">Trang có yêu Đồng không?</h3><div class="text-xs text-gray-500">Phạm Chu Đồng <i class="fas fa-check-circle text-[10px]"></i></div><div class="text-xs text-gray-500">0 lượt xem • vừa xong</div></div></div><div class="flex gap-2 cursor-pointer group"><div class="w-[168px] h-[94px] bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden relative"><img src="https://img.youtube.com/vi/jfKfPfyJRdk/mqdefault.jpg" class="w-full h-full object-cover group-hover:rounded-none transition-all"><span class="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-[10px] px-1 rounded font-medium">LIVE</span></div><div class="flex flex-col gap-1"><h3 class="font-bold text-sm line-clamp-2 leading-tight">Chắc là có ha </h3><div class="text-xs text-gray-500">Phạm Chu Đồng <i class="fas fa-check-circle text-[10px]"></i></div><div class="text-xs text-gray-500">0 lượt xem • vừa xong</div></div></div></div></div></div></div></div></div></div></div>
 
         <!-- 10. Winamp -->
-        <div id="winamp-window" class="window">
-            <div class="window-header" style="background: #333;" onmousedown="startDrag(event, 'winamp-window')"><div class="window-title" style="color: #0f0;">WINAMP - Love.mp3</div><div class="win-btn-close" onclick="closeWindow('winamp-window')"><i class="fas fa-times"></i></div></div>
-            <div class="p-2 winamp-controls">
-                <div class="text-[10px] text-green-400 font-mono mb-1">Đang phát:</div>
-                <div id="song-title" class="song-title-display">...</div>
-                <div class="winamp-visualizer" id="visualizer"></div>
-                <div class="flex justify-between items-center mt-3 px-2">
-                    <div class="winamp-btn" onclick="prevSong()"><i class="fas fa-step-backward"></i></div>
-                    <div class="winamp-btn play-btn" onclick="playMusic()"><i class="fas fa-play"></i></div>
-                    <div class="winamp-btn" onclick="pauseMusic()"><i class="fas fa-pause"></i></div>
-                    <div class="winamp-btn stop-btn" onclick="stopMusic()"><i class="fas fa-stop"></i></div>
-                    <div class="winamp-btn" onclick="nextSong()"><i class="fas fa-step-forward"></i></div>
-                </div>
-                <audio id="audio-player" onerror="handleAudioError()"></audio>
-            </div>
-        </div>
+        <div id="winamp-window" class="window"><div class="window-header" style="background: #333;" onmousedown="startDrag(event, 'winamp-window')"><div class="window-title" style="color: #0f0;">WINAMP - Love.mp3</div><div class="win-btn-close" onclick="closeWindow('winamp-window')"><i class="fas fa-times"></i></div></div><div class="p-2 winamp-controls"><div class="text-[10px] text-green-400 font-mono mb-1">Đang phát:</div><div id="song-title" class="song-title-display">...</div><div class="winamp-visualizer" id="visualizer"></div><div class="flex justify-between items-center mt-3 px-2"><div class="winamp-btn" onclick="prevSong()"><i class="fas fa-step-backward"></i></div><div class="winamp-btn play-btn" onclick="playMusic()"><i class="fas fa-play"></i></div><div class="winamp-btn" onclick="pauseMusic()"><i class="fas fa-pause"></i></div><div class="winamp-btn stop-btn" onclick="stopMusic()"><i class="fas fa-stop"></i></div><div class="winamp-btn" onclick="nextSong()"><i class="fas fa-step-forward"></i></div></div><audio id="audio-player" onerror="handleAudioError()"></audio></div></div>
 
-<!-- GACHA WINDOW -->
-        <div id="gacha-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'gacha-window')">
-                <div class="window-title">
-                    <!-- ICON NÀY LÀ CÔNG TẮC KÍCH HOẠT ADMIN (Click 5 lần) -->
-                    <i class="fas fa-gift mr-2 text-yellow-300 cursor-pointer" onclick="triggerAdminGacha()"></i> 
-                    Cỗ Máy Tình Yêu (Love Box)
-                </div>
-                <div class="win-btn-close" onclick="closeWindow('gacha-window')"><i class="fas fa-times"></i></div>
-            </div>
-            
-            <div class="gacha-stage">
-                <div class="gacha-cube" id="cube">
-                    <div class="gacha-face face-front"></div>
-                    <div class="gacha-face face-back"></div>
-                    <div class="gacha-face face-right"></div>
-                    <div class="gacha-face face-left"></div>
-                    <div class="gacha-face face-top"></div>
-                    <div class="gacha-face face-bottom"></div>
-                </div>
-                <div id="reward-popup">
-                    <div class="light-beam"></div>
-                    <img id="reward-img" src="" alt="Reward">
-                    <div id="reward-rank" class="uppercase text-xs font-bold tracking-widest mb-1">Rank</div>
-                    <div id="reward-name">Item Name</div>
-                    <div id="reward-desc">Description</div>
-                    <button class="gacha-btn" onclick="closeReward()">Nhận Quà</button>
-                </div>
-            </div>
-
-            <div class="gacha-controls">
-                <div class="text-sm mb-2 font-bold text-gray-600">Lượt rút hôm nay: <span id="pull-count" class="text-red-600">3/3</span></div>
-                <button class="gacha-btn" id="pull-btn" onclick="startGacha()">RÚT THƯỞNG</button>
-            </div>
-
-            <div class="bg-gray-200 px-2 py-1 text-xs font-bold text-gray-500 border-t border-gray-300">Kho Đồ (Inventory)</div>
-            <div class="inventory-area" id="inventory-grid">
-                <!-- Items will be here -->
-            </div>
-
-            <!-- HIDDEN ADMIN PANEL -->
-            <div id="gacha-admin">
-                <i class="fas fa-times admin-close" onclick="document.getElementById('gacha-admin').style.display='none'"></i>
-                <h2 class="text-xl font-bold mb-4 text-yellow-400 border-b pb-2">Admin God Mode</h2>
-                
-                <div class="admin-row">
-                    <label>Tên Vật Phẩm:</label>
-                    <input type="text" id="adm-name" placeholder="Ví dụ: Nụ hôn 5 phút">
-                </div>
-                <div class="admin-row">
-                    <label>Link Ảnh (Git Path):</label>
-                    <input type="text" id="adm-img" placeholder="./item1.jpg">
-                </div>
-                <div class="admin-row">
-                    <label>Rank:</label>
-                    <select id="adm-rank">
-                        <option value="white">Trắng (Common)</option>
-                        <option value="blue">Xanh Dương (Rare)</option>
-                        <option value="purple">Tím (Epic)</option>
-                        <option value="gold">Vàng (Legendary)</option>
-                        <option value="pink">Hồng (Mythical/Love)</option>
-                    </select>
-                </div>
-                <div class="admin-row">
-                    <label>Tỷ lệ (%):</label>
-                    <input type="number" id="adm-rate" placeholder="10">
-                </div>
-                <div class="admin-row">
-                    <label>Chú thích:</label>
-                    <input type="text" id="adm-desc" placeholder="Lời nhắn nhủ...">
-                </div>
-                <button class="xp-button w-full font-bold" onclick="addGachaItem()">Thêm Vật Phẩm</button>
-                
-                <div class="mt-4 border-t pt-2">
-                    <button class="bg-red-600 text-white px-2 py-1 text-xs rounded" onclick="resetGachaData()">Reset Toàn Bộ Dữ Liệu</button>
-                </div>
-            </div>
-            
-            <!-- Sounds -->
-            <audio id="sfx-shake" src="./shake.mp3"></audio>
-            <audio id="sfx-open" src="./open.mp3"></audio>
-            <audio id="sfx-rare" src="./rare.mp3"></audio>
-        </div>
-
-<!-- 11. GACHA LOVE BOX (Thêm đoạn này vào trước Taskbar) -->
-        <div id="gacha-window" class="window">
-            <div class="window-header" onmousedown="startDrag(event, 'gacha-window')">
-                <div class="window-title">
-                    <!-- Bấm 5 lần vào icon hộp quà này để mở Admin Mode -->
-                    <i class="fas fa-gift mr-2 text-yellow-300 cursor-pointer" onclick="triggerAdminGacha()"></i> 
-                    Cỗ Máy Tình Yêu (Love Box)
-                </div>
-                <div class="win-btn-close" onclick="closeWindow('gacha-window')"><i class="fas fa-times"></i></div>
-            </div>
-            
-            <div class="gacha-stage">
-                <div class="gacha-cube" id="cube">
-                    <div class="gacha-face face-front"></div>
-                    <div class="gacha-face face-back"></div>
-                    <div class="gacha-face face-right"></div>
-                    <div class="gacha-face face-left"></div>
-                    <div class="gacha-face face-top"></div>
-                    <div class="gacha-face face-bottom"></div>
-                </div>
-                
-                <!-- Popup nhận quà -->
-                <div id="reward-popup">
-                    <div class="light-beam"></div>
-                    <img id="reward-img" src="" alt="Reward">
-                    <div id="reward-rank" class="uppercase text-xs font-bold tracking-widest mb-1">Rank</div>
-                    <div id="reward-name">Item Name</div>
-                    <div id="reward-desc">Description</div>
-                    <button class="gacha-btn" onclick="closeReward()">Nhận Quà</button>
-                </div>
-            </div>
-
-            <div class="gacha-controls">
-                <div class="text-sm mb-2 font-bold text-gray-600">Lượt rút hôm nay: <span id="pull-count" class="text-red-600">3/3</span></div>
-                <button class="gacha-btn" id="pull-btn" onclick="startGacha()">RÚT THƯỞNG</button>
-            </div>
-
-            <div class="bg-gray-200 px-2 py-1 text-xs font-bold text-gray-500 border-t border-gray-300">Kho Đồ (Inventory)</div>
-            <div class="inventory-area" id="inventory-grid">
-                <!-- Vật phẩm sẽ hiện ở đây -->
-            </div>
-
-            <!-- Bảng Admin Ẩn -->
-            <div id="gacha-admin">
-                <i class="fas fa-times admin-close" onclick="document.getElementById('gacha-admin').style.display='none'"></i>
-                <h2 class="text-xl font-bold mb-4 text-yellow-400 border-b pb-2">Admin God Mode</h2>
-                
-                <div class="admin-row">
-                    <label>Tên Vật Phẩm:</label>
-                    <input type="text" id="adm-name" placeholder="Ví dụ: Nụ hôn 5 phút">
-                </div>
-                <div class="admin-row">
-                    <label>Link Ảnh (Git Path):</label>
-                    <input type="text" id="adm-img" placeholder="./item1.jpg">
-                </div>
-                <div class="admin-row">
-                    <label>Rank:</label>
-                    <select id="adm-rank">
-                        <option value="white">Trắng (Common)</option>
-                        <option value="blue">Xanh Dương (Rare)</option>
-                        <option value="purple">Tím (Epic)</option>
-                        <option value="gold">Vàng (Legendary)</option>
-                        <option value="pink">Hồng (Mythical/Love)</option>
-                    </select>
-                </div>
-                <div class="admin-row">
-                    <label>Tỷ lệ (%):</label>
-                    <input type="number" id="adm-rate" placeholder="10">
-                </div>
-                <div class="admin-row">
-                    <label>Chú thích:</label>
-                    <input type="text" id="adm-desc" placeholder="Lời nhắn nhủ...">
-                </div>
-                <button class="xp-button w-full font-bold" onclick="addGachaItem()">Thêm Vật Phẩm</button>
-                
-                <div class="mt-4 border-t pt-2">
-                    <button class="bg-red-600 text-white px-2 py-1 text-xs rounded" onclick="resetGachaData()">Reset Toàn Bộ Dữ Liệu</button>
-                </div>
-            </div>
-            
-            <!-- Sounds (Nhớ up file lên git) -->
-            <audio id="sfx-shake" src="./shake.mp3"></audio>
-            <audio id="sfx-open" src="./open.mp3"></audio>
-        </div>
-        
         <!-- TASKBAR -->
-        
-        <div class="taskbar">
-            <div class="start-button" onclick="alert('Đường vào tim Đồng chỉ có một cửa thôi!')"><i class="fab fa-windows mr-1"></i><span class="italic font-bold">start</span></div>
-            <div class="border-r border-white/20 h-4 mx-1"></div>
-            <div class="system-tray"><div class="mr-3 cursor-pointer" ondblclick="alert('Thời gian bên nhau: Vô cực!')"><span id="clock">12:00</span></div></div>
-        </div>
+        <div class="taskbar"><div class="start-button" onclick="alert('Đường vào tim Đồng chỉ có một cửa thôi!')"><i class="fab fa-windows mr-1"></i><span class="italic font-bold">start</span></div><div class="border-r border-white/20 h-4 mx-1"></div><div class="system-tray"><div class="mr-3 cursor-pointer" ondblclick="alert('Thời gian bên nhau: Vô cực!')"><span id="clock">12:00</span></div></div></div>
     </div>
 
     <script>
@@ -1053,6 +233,7 @@
             } else { setTimeout(() => { document.getElementById('boot-screen').style.display='none'; document.getElementById('desktop').style.display='block'; 
                 // Auto trigger HW popup after 15s
                 setTimeout(() => { document.getElementById('hardware-popup').style.display='flex'; startDriverInstall(); }, 15000);
+                setTimeout(triggerGlitch, 600000); // 10 mins
             }, 600); }
         }
         window.onload = typeBoot;
@@ -1061,6 +242,7 @@
         let highestZ = 1000;
         function openWindow(id) {
             const w = document.getElementById(id);
+            if (!w) { console.error("Window ID not found: " + id); return; }
             w.style.display = 'flex'; w.style.zIndex = ++highestZ;
             if(id === 'secret-window' && document.getElementById('typewriter-text').innerHTML === "") typeConfession();
             if(id === 'chrome-window') {
@@ -1080,640 +262,195 @@
         function doDrag(e) { if(!dragItem) return; dragItem.style.left = (e.clientX - offsetX) + 'px'; dragItem.style.top = (e.clientY - offsetY) + 'px'; dragItem.style.transform = 'none'; }
         function stopDrag() { document.removeEventListener('mousemove', doDrag); document.removeEventListener('mouseup', stopDrag); dragItem = null; }
 
-        // --- 1. RECYCLE BIN ---
-        function emptyBin() {
-            document.getElementById('bin-files').innerHTML = '<div class="p-4 text-center w-full">Đang xóa...</div>';
-            setTimeout(() => {
-                document.getElementById('bin-files').innerHTML = '<div class="p-4 text-center w-full text-gray-500 italic">Thùng rác trống rỗng.<br>Chỉ còn niềm vui bên Đồng.</div>';
-                alert("Đã xóa sạch mọi muộn phiền!");
-            }, 1500);
-        }
-
-        // --- 2. MS PAINT (AUTO DRAW) ---
-        let paintCtx;
-        function startAutoDraw() {
-            const canvas = document.getElementById('paint-canvas');
-            if(!paintCtx) paintCtx = canvas.getContext('2d');
-            paintCtx.clearRect(0, 0, canvas.width, canvas.height);
-            paintCtx.lineWidth = 3; paintCtx.strokeStyle = "#000";
-            
-            let steps = 0;
-            const drawInterval = setInterval(() => {
-                steps++;
-                paintCtx.beginPath();
-                // Boy
-                if(steps === 1) paintCtx.arc(100, 100, 20, 0, Math.PI*2); // Head
-                if(steps === 2) { paintCtx.moveTo(100, 120); paintCtx.lineTo(100, 200); } // Body
-                if(steps === 3) { paintCtx.moveTo(100, 140); paintCtx.lineTo(70, 170); } // Arm L
-                if(steps === 4) { paintCtx.moveTo(100, 140); paintCtx.lineTo(130, 170); } // Arm R
-                if(steps === 5) { paintCtx.moveTo(100, 200); paintCtx.lineTo(80, 250); } // Leg L
-                if(steps === 6) { paintCtx.moveTo(100, 200); paintCtx.lineTo(120, 250); } // Leg R
-                
-                // Girl
-                if(steps === 7) paintCtx.arc(200, 100, 20, 0, Math.PI*2); // Head
-                if(steps === 8) { paintCtx.moveTo(200, 120); paintCtx.lineTo(200, 200); } // Body
-                if(steps === 9) { paintCtx.moveTo(200, 200); paintCtx.lineTo(170, 250); } // Leg L
-                if(steps === 10) { paintCtx.moveTo(200, 200); paintCtx.lineTo(230, 250); } // Leg R
-                if(steps === 11) { paintCtx.moveTo(200, 140); paintCtx.lineTo(170, 170); } // Arm L (Holding hands)
-                if(steps === 12) { paintCtx.moveTo(200, 140); paintCtx.lineTo(230, 170); } // Arm R
-                
-                // Heart
-                if(steps === 13) { paintCtx.strokeStyle = "red"; paintCtx.moveTo(150, 100); paintCtx.arc(140, 100, 10, 0, Math.PI, true); paintCtx.arc(160, 100, 10, 0, Math.PI, true); paintCtx.lineTo(150, 130); }
-                
-                paintCtx.stroke();
-                
-                if(steps === 15) {
-                    paintCtx.fillStyle = "blue"; paintCtx.font = "16px Arial";
-                    paintCtx.fillText("Tớ vẽ hình không đẹp,", 50, 280);
-                }
-                if(steps === 16) {
-                    paintCtx.fillText("nhưng tớ vẽ được tương lai 2 đứa mình!", 50, 300);
-                    clearInterval(drawInterval);
-                }
-            }, 500);
-        }
-
-        // --- 3. CMD ---
-        let hasCmdError = false; // Biến kiểm tra xem đã sai lần nào chưa
-
-        function initCMD() {
-            // Đảm bảo trỏ đúng vào ô input mới
-            const input = document.getElementById('cmd-input');
-            
-            // Xóa event cũ để tránh bị double (nếu có)
-            const new_input = input.cloneNode(true);
-            input.parentNode.replaceChild(new_input, input);
-            
-            new_input.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter') {
-                    const cmd = this.value.trim().toLowerCase();
-                    const output = document.getElementById('cmd-content');
-                    
-                    // In lại lệnh vừa nhập
-                    const line = document.createElement('div'); 
-                    line.className = 'cmd-line'; 
-                    line.innerText = "C:\\Users\\Dong> " + this.value;
-                    output.insertBefore(line, this.parentElement);
-                    
-                    this.value = ''; // Xóa trắng ô nhập
-                    
-                    if(cmd === 'ping my_heart') {
-                        // Nếu đúng lệnh: Chạy hiệu ứng ma trận tình yêu
-                        setInterval(() => {
-                            const r = document.createElement('div'); r.className = 'cmd-line';
-                            r.style.color = '#00ff00'; // Màu xanh lá hacker
-                            r.innerText = "Reply from CRUSH: bytes=32 time=0ms TTL=FOREVER";
-                            output.insertBefore(r, this.parentElement);
-                            output.scrollTop = output.scrollHeight; // Tự cuộn xuống dưới
-                        }, 500);
-                    } else {
-                        // Nếu sai lệnh
-                        const err = document.createElement('div'); 
-                        err.className = 'cmd-line'; 
-                        err.innerText = "'" + cmd + "' is not recognized as an internal or external command.";
-                        output.insertBefore(err, this.parentElement);
-                        
-                        // HIỆN GỢI Ý NẾU LÀ LẦN ĐẦU SAI
-                        if (!hasCmdError) {
-                             const hint = document.createElement('div'); 
-                             hint.className = 'cmd-line'; 
-                             hint.style.color = 'yellow';
-                             hint.innerText = "Gợi ý: Thử lệnh 'ping my_heart' xem sao?";
-                             output.insertBefore(hint, this.parentElement);
-                             hasCmdError = true;
-                        }
-                    }
-                    // Luôn cuộn xuống dòng cuối cùng
-                    output.scrollTop = output.scrollHeight;
-                }
-            });
-            // Focus vào ô nhập ngay khi mở
-            new_input.focus();
-        }
-        // --- 4. HARDWARE POPUP ---
-        function startDriverInstall() {
-            const bar = document.getElementById('driver-progress');
-            bar.style.width = '0%';
-            setTimeout(() => bar.style.width = '50%', 1000);
-            setTimeout(() => bar.style.width = '100%', 3000);
-            setTimeout(() => {
-                document.getElementById('hardware-popup').innerHTML = `
-                    <div class="popup-header"><i class="fas fa-check-circle text-green-600"></i> Installed</div>
-                    <div>Thiết bị đã tương thích hoàn toàn với Bàn tay của Phạm Chu Đồng. Sẵn sàng nắm chặt.</div>
-                `;
-                setTimeout(() => document.getElementById('hardware-popup').style.display = 'none', 5000);
-            }, 3500);
-        }
-
-        // --- 5. MINESWEEPER SAFE MODE ---
-        function initMines() {
-            const grid = document.getElementById('mine-grid');
-            grid.innerHTML = '';
-            const msg = ['I', 'L', 'O', 'V', 'E', 'U', '❤️', '❤️', '❤️'];
-            let msgIdx = 0;
-            
-            for(let i=0; i<25; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'mine-cell';
-                cell.onclick = function() {
-                    if(this.classList.contains('revealed')) return;
-                    this.classList.add('revealed');
-                    if(msgIdx < msg.length) {
-                        this.innerText = msg[msgIdx++];
-                        this.style.color = 'red';
-                    } else {
-                        this.innerText = "";
-                        this.style.background = "#ddd";
-                    }
-                }
-                grid.appendChild(cell);
-            }
-        }
-
-        // --- 6. NIGHT MODE ---
-// --- 6. NIGHT MODE (ĐÃ NÂNG CẤP CỰC QUANG) ---
-        // --- 6. NIGHT MODE (BẦU TRỜI SAO & CỰC QUANG VĨNH CỬU) ---
-        function toggleNightMode() {
-            const desktop = document.getElementById('desktop');
-            const canvas = document.getElementById('stars-canvas');
-            
-            if(canvas.style.display === 'block') {
-                canvas.style.display = 'none';
-                desktop.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png')";
-            } else {
-                desktop.style.backgroundImage = 'none';
-                desktop.style.backgroundColor = '#001'; // Nền đen xanh thẫm
-                canvas.style.display = 'block';
-                initStars();
-            }
-        }
-
-        function initStars() {
-            const canvas = document.getElementById('stars-canvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Set full màn hình
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            // Xử lý resize màn hình
-            window.onresize = () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            };
-            
-            const stars = [];
-            // Tạo 300 ngôi sao
-            for(let i=0; i<300; i++) {
-                stars.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    r: Math.random() * 2 + 0.5, // Kích thước ngẫu nhiên
-                    alpha: Math.random(), // Độ sáng
-                    d: (Math.random() - 0.5) * 0.02, // Tốc độ nhấp nháy
-                    speed: Math.random() * 0.5 + 0.1 // Tốc độ rơi nhẹ
-                });
-            }
-
-            let t = 0; // Biến thời gian cho cực quang
-
-            function animateStars() {
-                // Nếu tắt night mode thì dừng vòng lặp
-                if(canvas.style.display === 'none') return;
-                
-                // Xóa màn hình cũ
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // --- 1. VẼ CỰC QUANG (AURORA) ---
-                t += 0.01;
-                // Tạo Gradient màu cực quang (Xanh lục - Tím - Xanh dương)
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                gradient.addColorStop(0, 'rgba(0,0,20,0)');
-                gradient.addColorStop(0.2, 'rgba(0, 255, 127, 0.08)'); // Xanh lục neon mờ
-                gradient.addColorStop(0.5, 'rgba(138, 43, 226, 0.08)'); // Tím mờ
-                gradient.addColorStop(0.8, 'rgba(0, 191, 255, 0.08)'); // Xanh dương mờ
-                gradient.addColorStop(1, 'rgba(0,0,20,0)');
-                
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.moveTo(0, canvas.height);
-                
-                // Vẽ sóng sin uốn lượn
-                for(let x = 0; x <= canvas.width; x += 20) {
-                    // Công thức sóng chồng chập để tạo độ tự nhiên
-                    let y = canvas.height/2 
-                          + Math.sin(x * 0.005 + t) * 60 
-                          + Math.sin(x * 0.01 - t * 0.5) * 40;
-                    ctx.lineTo(x, y);
-                }
-                ctx.lineTo(canvas.width, canvas.height);
-                ctx.lineTo(0, canvas.height);
-                ctx.fill();
-                
-                // --- 2. VẼ SAO LẤP LÁNH & RƠI ---
-                ctx.fillStyle = "white";
-                stars.forEach(s => {
-                    // Hiệu ứng nhấp nháy
-                    s.alpha += s.d;
-                    if(s.alpha <= 0.2 || s.alpha >= 1) s.d = -s.d;
-                    
-                    // Hiệu ứng rơi nhẹ
-                    s.y -= s.speed; // Bay lên nhẹ (hoặc s.y += s.speed để rơi xuống)
-                    if (s.y < 0) s.y = canvas.height; // Reset vị trí khi bay hết màn hình
-                    
-                    // Vẽ sao
-                    ctx.globalAlpha = Math.max(0, Math.min(1, s.alpha)); // Khóa alpha từ 0-1
-                    ctx.beginPath(); 
-                    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); 
-                    ctx.fill();
-                });
-                ctx.globalAlpha = 1; // Reset alpha chung
-                
-                // --- 3. VẼ CHÒM SAO BẠCH DƯƠNG (CỐ ĐỊNH GIỮA MÀN HÌNH) ---
-                const cx = canvas.width / 2; 
-                const cy = canvas.height / 2;
-                
-                ctx.strokeStyle = "rgba(255, 255, 0, 0.5)"; 
-                ctx.lineWidth = 1.5; 
-                ctx.beginPath();
-                // Tọa độ các điểm sao Bạch Dương (Aries)
-                ctx.moveTo(cx - 60, cy + 30); // Điểm đuôi
-                ctx.lineTo(cx - 10, cy + 10); // Điểm giữa
-                ctx.lineTo(cx + 30, cy - 10); // Điểm đầu
-                ctx.lineTo(cx + 60, cy + 20); // Điểm sừng nhỏ
-                ctx.stroke();
-                
-                // Chấm các ngôi sao chính của chòm sao
-                ctx.fillStyle = "#ffffa0"; // Vàng nhạt
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = "white";
-                [
-                    {x: cx - 60, y: cy + 30, r: 4}, 
-                    {x: cx - 10, y: cy + 10, r: 3},
-                    {x: cx + 30, y: cy - 10, r: 5}, // Sao Alpha sáng nhất
-                    {x: cx + 60, y: cy + 20, r: 3}
-                ].forEach(p => {
-                    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-                });
-
-                // Chữ phát sáng
-                ctx.shadowBlur = 5;
-                ctx.shadowColor = "yellow";
-                ctx.font = "bold 14px Tahoma";
-                ctx.fillStyle = "yellow";
-                ctx.textAlign = "center";
-                ctx.fillText("Bạch Dương (09/04) - Của Đồng", cx, cy + 60);
-                
-                // Reset shadow và loop tiếp
-                ctx.shadowBlur = 0;
-                requestAnimationFrame(animateStars);
-            }
-            // Bắt đầu chạy animation
-            animateStars();
-        }
-        // --- EXISTING LOGIC (CONFESSION, SNAKE, CALC, WINAMP, CHROME, TASKMGR, GLITCH) ---
-        // (Keep all previous functions here)
-        
-        let currentTrackIndex = 0;
-        let audio = document.getElementById('audio-player');
-        let visInterval;
-        let isPlaying = false;
-        
-        // Playlist Configuration
-        const playlist = [
-            { title: "1. Demo Chill", src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" },
-            { title: "2. SECRET", src: "./nhac.mp3" }
-        ];
-        document.getElementById('song-title').innerText = playlist[0].title;
-
-        function playMusic() {
-            if(!audio.src) audio.src = playlist[currentTrackIndex].src;
-            audio.play().then(() => { isPlaying=true; startVisualizer(); }).catch(e => console.log(e));
-        }
-        function pauseMusic() { audio.pause(); isPlaying=false; stopVisualizer(); }
-        function stopMusic() { audio.pause(); audio.currentTime=0; isPlaying=false; stopVisualizer(); }
-        function nextSong() { currentTrackIndex = (currentTrackIndex+1)%playlist.length; audio.src=playlist[currentTrackIndex].src; document.getElementById('song-title').innerText=playlist[currentTrackIndex].title; playMusic(); }
-        function prevSong() { currentTrackIndex = (currentTrackIndex-1+playlist.length)%playlist.length; audio.src=playlist[currentTrackIndex].src; document.getElementById('song-title').innerText=playlist[currentTrackIndex].title; playMusic(); }
-        
-        function startVisualizer() {
-            const c = document.getElementById('visualizer'); c.innerHTML = '';
-            for(let i=0; i<20; i++) { const b = document.createElement('div'); b.className = 'bar'; b.style.height = '10px'; b.style.width = '10px'; c.appendChild(b); }
-            clearInterval(visInterval); visInterval = setInterval(() => { const bars = document.querySelectorAll('.bar'); bars.forEach(b => { b.style.height = Math.floor(Math.random()*30+5)+'px'; }); }, 100);
-        }
-        function stopVisualizer() { clearInterval(visInterval); }
-        function handleAudioError() { console.log("Lỗi nhạc, next bài."); setTimeout(nextSong, 1000); }
-
-
-        // Chrome Logic
-        function goHome() { 
-            document.getElementById('view-search').classList.remove('hidden-view');
-            document.getElementById('view-results').classList.add('hidden-view');
-            document.getElementById('view-youtube').classList.add('hidden-view');
-            
-            document.getElementById('chrome-url').innerText = "https://www.google.com";
-            document.getElementById('google-input').value = "";
-            document.getElementById('video-container').innerHTML = `
-                <div class="fake-player" onclick="loadRealVideo()">
-                    <img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail">
-                    <div class="play-btn-overlay">
-                        <div class="play-triangle"></div>
-                    </div>
-                </div>`;
-        }
-        
-        // Task Manager Graph
-        function startTaskMgr() {
-            const g = document.getElementById('cpu-graph'); g.innerHTML = '';
-            for(let i=0; i<50; i++) { const b = document.createElement('div'); b.className = 'cpu-bar'; b.style.height = '100%'; g.appendChild(b); }
-        }
-
-        // Glitch
-        function triggerGlitch() {
-            // 1. Bắt đầu hiệu ứng nhiễu (Glitch)
-            document.body.classList.add('glitching'); 
-            document.getElementById('glitch-overlay').style.display = 'block';
-            
-            // 2. Sau 2 giây -> Hiện màn hình xanh (BSOD)
-            setTimeout(() => { 
-                document.body.classList.remove('glitching'); 
-                document.getElementById('glitch-overlay').style.display = 'none'; 
-                document.getElementById('bsod').style.display = 'block'; 
-            }, 2000);
-
-            // 3. Sau 5 GIÂY (5000ms) -> Tự thoát màn hình xanh và mở lại Confession
-            setTimeout(() => { 
-                document.getElementById('bsod').style.display = 'none'; 
-                // Reset lại hình nền nếu đang ở chế độ khác
-                document.getElementById('desktop').style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png')";
-            }, 7000); // 2000ms glitch + 5000ms BSOD = 7000ms tổng
-        }
-
-        // Confession
-        const msg = "Chào cậu.\n\nTớ là Đồng.\nNgành Tự động hóa dạy tớ về điều khiển hệ thống, nhưng tớ chịu chết không điều khiển được nhịp tim khi gặp cậu.\n\nTớ có cái này muốn hỏi...";
-        let charIdx = 0;
-        function typeConfession() {
-            if(charIdx < msg.length) { document.getElementById('typewriter-text').textContent += msg.charAt(charIdx++); setTimeout(typeConfession, 40); }
-            else { setTimeout(() => { document.getElementById('hidden-content').classList.remove('hidden', 'opacity-0'); }, 500); }
-        }
-        function acceptLove() {
-            // 1. Đóng cửa sổ
-            closeWindow('secret-window');
-            
-            // 2. Đổi màu nền cho lãng mạn
-            document.getElementById('desktop').style.background = 'linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)';
-            
-            // 3. Kích hoạt mưa tim (Đây là đoạn bị thiếu)
-            setInterval(() => {
-                const h = document.createElement('div'); 
-                h.className = 'heart'; 
-                h.innerHTML = '❤️';
-                h.style.left = Math.random() * 100 + 'vw'; 
-                h.style.fontSize = (Math.random() * 20 + 10) + 'px'; 
-                h.style.animationDuration = (Math.random() * 3 + 2) + 's'; 
-                document.getElementById('desktop').appendChild(h); 
-                
-                // Tự xóa tim sau 5s để đỡ lag máy
-                setTimeout(() => h.remove(), 5000);
-            }, 100); // 100ms rơi 1 quả
-
-            // 4. Thông báo chốt đơn
-            alert("Hệ thống ghi nhận: LOVE_GRANTED! (Yêu vcl)");
-        }
-
-        // Common
-        setInterval(() => { const d = new Date(); document.getElementById('clock').innerText = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); }, 1000);
-        
-        // Snake, Calc, Notepad logic reuse from previous...
-        function addCalc(v) { document.getElementById('calc-res').innerText += v; }
-        function clearCalc() { document.getElementById('calc-res').innerText = ''; }
-        function loveResult() { document.getElementById('calc-res').innerText = '09/04/2004'; }
-        
-        const cvs = document.getElementById('gameCanvas'); const ctx = cvs.getContext('2d');
-        const box = 20; let snake = []; let food = {}; let d; let game; let score = 0;
-        function initSnake() { clearInterval(game); snake = [{x: 9*box, y: 10*box}]; food = {x: Math.floor(Math.random()*14)*box, y: Math.floor(Math.random()*14)*box}; score=0; d=undefined; document.getElementById('score').innerText=score; document.addEventListener("keydown", direction); game = setInterval(drawSnake, 200); }
-        function direction(event) { if(event.keyCode==37 && d!="RIGHT") d="LEFT"; else if(event.keyCode==38 && d!="DOWN") d="UP"; else if(event.keyCode==39 && d!="LEFT") d="RIGHT"; else if(event.keyCode==40 && d!="UP") d="DOWN"; }
-        function drawSnake() {
-            ctx.fillStyle="#222"; ctx.fillRect(0,0,280,280);
-            for(let i=0; i<snake.length; i++) { ctx.fillStyle=(i==0)?"#0f0":"white"; ctx.fillRect(snake[i].x, snake[i].y, box, box); }
-            ctx.fillStyle="red"; ctx.font="20px Arial"; ctx.fillText("❤", food.x+2, food.y+18);
-            let snakeX=snake[0].x; let snakeY=snake[0].y;
-            if(d=="LEFT") snakeX-=box; if(d=="UP") snakeY-=box; if(d=="RIGHT") snakeX+=box; if(d=="DOWN") snakeY+=box;
-            if(snakeX==food.x && snakeY==food.y) { score++; document.getElementById('score').innerText=score; food={x:Math.floor(Math.random()*14)*box, y:Math.floor(Math.random()*14)*box}; } else { snake.pop(); }
-            if(snakeX<0) snakeX=260; if(snakeX>260) snakeX=0; if(snakeY<0) snakeY=260; if(snakeY>260) snakeY=0;
-            snake.unshift({x:snakeX, y:snakeY});
-        }
-        
-        // Chrome search
-        function doGoogleSearch() {
-            const val = document.getElementById('google-input').value.trim();
-            if(!val) return;
-            document.getElementById('view-search').classList.add('hidden-view');
-            document.getElementById('view-results').classList.remove('hidden-view');
-            document.getElementById('result-bar-text').innerText = val;
-            document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
-        }
-        function openYouTube() {
-            document.querySelectorAll('.chrome-view').forEach(e => e.classList.add('hidden-view'));
-            document.getElementById('view-youtube').classList.remove('hidden-view'); 
-            document.getElementById('chrome-url').innerText = "https://www.youtube.com";
-        }
-
-        // FIX LỖI 153: Dùng link Embed cơ bản + no-referrer để tránh bị chặn
-
-        function loadRealVideo() {
-             document.getElementById('video-container').innerHTML = `
-             <iframe width="100%" height="100%" 
-                src="https://www.youtube-nocookie.com/embed/vVhKA9Av6vA?rel=0&modestbranding=1" 
-                title="YouTube video player" 
-                frameborder="0" 
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-             </iframe>`;
-        }
-
-// --- LOVE GACHA LOGIC ---
-        
-        // 1. Dữ liệu mặc định (Nếu chưa có gì trong LocalStorage)
+        // --- GACHA LOGIC ---
         const defaultGachaItems = [
-            { id: 1, name: "Cái ôm ấm áp", img: "./hug.jpg", rank: "white", rate: 40, desc: "Một cái ôm nhẹ nhàng xua tan mệt mỏi." },
-            { id: 2, name: "Trà sữa full topping", img: "./milktea.jpg", rank: "blue", rate: 30, desc: "Đồng mời, không lo béo!" },
-            { id: 3, name: "Vé xem phim", img: "./ticket.jpg", rank: "purple", rate: 15, desc: "Phim gì cũng được, miễn là đi cùng nhau." },
-            { id: 4, name: "Chuyến đi chơi xa", img: "./trip.jpg", rank: "gold", rate: 10, desc: "Xách ba lô lên và đi thôi!" },
-            { id: 5, name: "Trái tim của Đồng", img: "./myheart.jpg", rank: "pink", rate: 5, desc: "Vật phẩm quý giá nhất hệ mặt trời." }
+            { id: 1, name: "Cái ôm ấm áp", img: "./hug.jpg", rank: "white", rate: 40, desc: "Một cái ôm nhẹ nhàng." },
+            { id: 2, name: "Trà sữa", img: "./milktea.jpg", rank: "blue", rate: 30, desc: "Đồng mời!" },
+            { id: 3, name: "Vé xem phim", img: "./ticket.jpg", rank: "purple", rate: 15, desc: "Đi xem phim nhé." },
+            { id: 4, name: "Đi chơi xa", img: "./trip.jpg", rank: "gold", rate: 10, desc: "Xách ba lô lên và đi." },
+            { id: 5, name: "Trái tim Đồng", img: "./myheart.jpg", rank: "pink", rate: 5, desc: "Vật phẩm quý giá nhất." }
         ];
-
-        // 2. Load dữ liệu
         let gachaItems = JSON.parse(localStorage.getItem('xp_gacha_items')) || defaultGachaItems;
         let inventory = JSON.parse(localStorage.getItem('xp_gacha_inventory')) || [];
         let dailyData = JSON.parse(localStorage.getItem('xp_gacha_daily')) || { date: '', count: 3 };
 
-        // 3. Reset ngày mới
         const today = new Date().toDateString();
-        if (dailyData.date !== today) {
-            dailyData = { date: today, count: 3 };
-            localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData));
-        }
-        updateUI();
+        if (dailyData.date !== today) { dailyData = { date: today, count: 3 }; localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData)); }
+        setTimeout(updateUI, 1000);
 
-        // 4. Hàm Admin Trigger (Ẩn)
-        let adminClickCount = 0;
-        let adminClickTimer;
+        let adminClickCount = 0, adminClickTimer;
         function triggerAdminGacha() {
-            adminClickCount++;
-            clearTimeout(adminClickTimer);
-            adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 2000); // Reset nếu không bấm tiếp trong 2s
-            
-            if (adminClickCount === 5) {
-                document.getElementById('gacha-admin').style.display = 'block';
-                adminClickCount = 0;
-                alert("Chào Admin! Đã mở khóa chế độ chỉnh sửa Gacha.");
-            }
+            adminClickCount++; clearTimeout(adminClickTimer); adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 2000);
+            if (adminClickCount === 5) { document.getElementById('gacha-admin').style.display = 'block'; adminClickCount = 0; alert("Admin Mode Unlocked!"); }
         }
-
-        // 5. Hàm Rút Thưởng
         function startGacha() {
-            if (dailyData.count <= 0) {
-                alert("Hôm nay hết lượt rồi bé ơi! Mai quay lại nhé 😘");
-                return;
-            }
-
-            // Trừ lượt
-            dailyData.count--;
-            localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData));
-            updateUI();
-
-            // Animation
-            const cube = document.getElementById('cube');
-            const btn = document.getElementById('pull-btn');
-            btn.disabled = true;
-            cube.classList.add('spinning');
-            
-            // Play Shake Sound
-            const shakeSfx = document.getElementById('sfx-shake');
-            if(shakeSfx) { shakeSfx.currentTime = 0; shakeSfx.play().catch(e=>{}); }
-
-            // Random Logic
-            setTimeout(() => {
-                cube.classList.remove('spinning');
-                const item = rollItem();
-                showReward(item);
-                btn.disabled = false;
-            }, 2000);
+            if (dailyData.count <= 0) { alert("Hôm nay hết lượt rồi bé ơi!"); return; }
+            dailyData.count--; localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData)); updateUI();
+            const cube = document.getElementById('cube'); const btn = document.getElementById('pull-btn');
+            btn.disabled = true; cube.classList.add('spinning');
+            const sfx = document.getElementById('sfx-shake'); if(sfx) sfx.play().catch(()=>{});
+            setTimeout(() => { cube.classList.remove('spinning'); const item = rollItem(); showReward(item); btn.disabled = false; }, 2000);
         }
-
         function rollItem() {
-            // Tính tổng tỷ lệ
-            let totalRate = gachaItems.reduce((sum, item) => sum + parseInt(item.rate), 0);
-            let random = Math.random() * totalRate;
-            
-            for (let item of gachaItems) {
-                if (random < item.rate) {
-                    addToInventory(item);
-                    return item;
-                }
-                random -= item.rate;
-            }
-            return gachaItems[0]; // Fallback
+            let total = gachaItems.reduce((sum, item) => sum + parseInt(item.rate), 0); let random = Math.random() * total;
+            for (let item of gachaItems) { if (random < item.rate) { addToInventory(item); return item; } random -= item.rate; } return gachaItems[0];
         }
-
-        function addToInventory(item) {
-            // Thêm vào kho, có timestamp để sort
-            inventory.push({ ...item, obtainedAt: new Date().getTime() });
-            localStorage.setItem('xp_gacha_inventory', JSON.stringify(inventory));
-            renderInventory();
-        }
-
+        function addToInventory(item) { inventory.push(item); localStorage.setItem('xp_gacha_inventory', JSON.stringify(inventory)); renderInventory(); }
         function showReward(item) {
-            const popup = document.getElementById('reward-popup');
-            const img = document.getElementById('reward-img');
-            const name = document.getElementById('reward-name');
-            const rank = document.getElementById('reward-rank');
-            const desc = document.getElementById('reward-desc');
-            const openSfx = document.getElementById('sfx-open');
-
-            // Set Data
-            img.src = item.img;
-            name.innerText = item.name;
-            desc.innerText = item.desc;
-            
-            // Set Color based on Rank
+            const popup = document.getElementById('reward-popup'); document.getElementById('reward-img').src = item.img; document.getElementById('reward-name').innerText = item.name; document.getElementById('reward-desc').innerText = item.desc;
             const colors = { white: '#ecf0f1', blue: '#3498db', purple: '#9b59b6', gold: '#f1c40f', pink: '#ff69b4' };
-            name.style.color = colors[item.rank] || 'white';
-            rank.innerText = item.rank + " ITEM";
-            rank.style.color = colors[item.rank];
-            rank.className = `uppercase text-xs font-bold tracking-widest mb-1 rank-${item.rank}`;
-
-            // Play Sound
-            if(openSfx) { openSfx.currentTime = 0; openSfx.play().catch(e=>{}); }
-
+            document.getElementById('reward-name').style.color = colors[item.rank];
+            const rankEl = document.getElementById('reward-rank'); rankEl.innerText = item.rank + " ITEM"; rankEl.className = `uppercase text-xs font-bold tracking-widest mb-1 rank-${item.rank}`; rankEl.style.color = colors[item.rank];
+            const sfx = document.getElementById('sfx-open'); if(sfx) sfx.play().catch(()=>{});
             popup.style.display = 'flex';
         }
-
-        function closeReward() {
-            document.getElementById('reward-popup').style.display = 'none';
-        }
-
-        function updateUI() {
-            document.getElementById('pull-count').innerText = `${dailyData.count}/3`;
-            renderInventory();
-        }
-
+        function closeReward() { document.getElementById('reward-popup').style.display = 'none'; }
+        function updateUI() { const c = document.getElementById('pull-count'); if(c) c.innerText = `${dailyData.count}/3`; renderInventory(); }
         function renderInventory() {
-            const grid = document.getElementById('inventory-grid');
-            grid.innerHTML = '';
-            // Sort mới nhất lên đầu
-            const sortedInv = [...inventory].reverse();
-            
-            sortedInv.forEach(item => {
-                const el = document.createElement('div');
-                el.className = `inv-item rank-${item.rank}`;
-                el.title = item.desc; // Tooltip
-                el.innerHTML = `
-                    <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
-                    <div class="inv-name" style="color: black;">${item.name}</div>
-                `;
-                grid.appendChild(el);
+            const grid = document.getElementById('inventory-grid'); if(!grid) return; grid.innerHTML = '';
+            [...inventory].reverse().forEach(item => {
+                const el = document.createElement('div'); el.className = `inv-item rank-${item.rank}`; el.title = item.desc;
+                el.innerHTML = `<img src="${item.img}" onerror="this.style.display='none'"><div class="inv-name">${item.name}</div>`; grid.appendChild(el);
+            });
+        }
+        function addGachaItem() {
+            const name = document.getElementById('adm-name').value; const img = document.getElementById('adm-img').value; const rank = document.getElementById('adm-rank').value; const rate = document.getElementById('adm-rate').value; const desc = document.getElementById('adm-desc').value;
+            if(!name || !img || !rate) return alert("Nhập thiếu!");
+            gachaItems.push({ id: Date.now(), name, img, rank, rate, desc }); localStorage.setItem('xp_gacha_items', JSON.stringify(gachaItems)); alert("Đã thêm!");
+        }
+        function resetGachaData() { if(confirm("Xóa sạch?")) { localStorage.removeItem('xp_gacha_items'); localStorage.removeItem('xp_gacha_inventory'); localStorage.removeItem('xp_gacha_daily'); location.reload(); } }
+
+        // --- APP LOGIC ---
+        function emptyBin() { document.getElementById('bin-files').innerHTML = '<div class="p-4 text-center w-full">Đang xóa...</div>'; setTimeout(() => { document.getElementById('bin-files').innerHTML = '<div class="p-4 text-center w-full text-gray-500 italic">Thùng rác trống rỗng.<br>Chỉ còn niềm vui bên Đồng.</div>'; alert("Đã xóa sạch!"); }, 1500); }
+
+        let paintCtx;
+        function startAutoDraw() {
+            const canvas = document.getElementById('paint-canvas'); if(!paintCtx) paintCtx = canvas.getContext('2d');
+            paintCtx.clearRect(0, 0, canvas.width, canvas.height); paintCtx.lineWidth = 3; paintCtx.strokeStyle = "#000";
+            let steps = 0;
+            const drawInterval = setInterval(() => {
+                steps++; paintCtx.beginPath();
+                if(steps === 1) paintCtx.arc(100, 100, 20, 0, Math.PI*2); if(steps === 2) { paintCtx.moveTo(100, 120); paintCtx.lineTo(100, 200); }
+                if(steps === 3) { paintCtx.moveTo(100, 140); paintCtx.lineTo(70, 170); } if(steps === 4) { paintCtx.moveTo(100, 140); paintCtx.lineTo(130, 170); }
+                if(steps === 5) { paintCtx.moveTo(100, 200); paintCtx.lineTo(80, 250); } if(steps === 6) { paintCtx.moveTo(100, 200); paintCtx.lineTo(120, 250); }
+                if(steps === 7) paintCtx.arc(200, 100, 20, 0, Math.PI*2); if(steps === 8) { paintCtx.moveTo(200, 120); paintCtx.lineTo(200, 200); }
+                if(steps === 9) { paintCtx.moveTo(200, 200); paintCtx.lineTo(170, 250); } if(steps === 10) { paintCtx.moveTo(200, 200); paintCtx.lineTo(230, 250); }
+                if(steps === 11) { paintCtx.moveTo(200, 140); paintCtx.lineTo(170, 170); } if(steps === 12) { paintCtx.moveTo(200, 140); paintCtx.lineTo(230, 170); }
+                if(steps === 13) { paintCtx.strokeStyle = "red"; paintCtx.moveTo(150, 100); paintCtx.arc(140, 100, 10, 0, Math.PI, true); paintCtx.arc(160, 100, 10, 0, Math.PI, true); paintCtx.lineTo(150, 130); }
+                paintCtx.stroke();
+                if(steps === 15) { paintCtx.fillStyle = "blue"; paintCtx.font = "16px Arial"; paintCtx.fillText("Tớ vẽ hình không đẹp,", 50, 280); }
+                if(steps === 16) { paintCtx.fillText("nhưng tớ vẽ được tương lai 2 đứa mình!", 50, 300); clearInterval(drawInterval); }
+            }, 500);
+        }
+
+        let cmdHintShown = false;
+        function initCMD() {
+            const oldInput = document.getElementById('cmd-input'); const newInput = oldInput.cloneNode(true); oldInput.parentNode.replaceChild(newInput, oldInput); newInput.focus();
+            newInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    const cmd = this.value.trim(); const output = document.getElementById('cmd-content');
+                    const div = document.createElement('div'); div.className = 'cmd-line'; div.innerText = "C:\\Users\\Dong> " + cmd; output.insertBefore(div, this.parentElement); this.value = '';
+                    if(cmd.toLowerCase() === 'ping my_heart') { setInterval(() => { const r = document.createElement('div'); r.className = 'cmd-line'; r.style.color = '#00ff00'; r.innerText = "Reply from CRUSH: bytes=32 time=0ms TTL=FOREVER"; output.insertBefore(r, this.parentElement); output.scrollTop = output.scrollHeight; }, 500); } 
+                    else { const err = document.createElement('div'); err.className = 'cmd-line'; err.innerText = "'" + cmd + "' is not recognized."; output.insertBefore(err, this.parentElement); if (!cmdHintShown) { const hint = document.createElement('div'); hint.className = 'cmd-line'; hint.style.color = 'yellow'; hint.innerText = "Gợi ý: Thử nhập lệnh 'ping my_heart' xem sao?"; output.insertBefore(hint, this.parentElement); cmdHintShown = true; } }
+                    output.scrollTop = output.scrollHeight;
+                }
             });
         }
 
-        // 6. Admin Logic: Add Item
-        function addGachaItem() {
-            const name = document.getElementById('adm-name').value;
-            const img = document.getElementById('adm-img').value;
-            const rank = document.getElementById('adm-rank').value;
-            const rate = parseInt(document.getElementById('adm-rate').value);
-            const desc = document.getElementById('adm-desc').value;
-
-            if (!name || !img || !rate) {
-                alert("Nhập thiếu thông tin rồi Admin ơi!");
-                return;
-            }
-
-            const newItem = {
-                id: Date.now(),
-                name, img, rank, rate, desc
-            };
-
-            gachaItems.push(newItem);
-            localStorage.setItem('xp_gacha_items', JSON.stringify(gachaItems));
-            
-            alert("Đã thêm vật phẩm thành công!");
-            // Reset form
-            document.getElementById('adm-name').value = '';
+        function startDriverInstall() {
+            const bar = document.getElementById('driver-progress'); bar.style.width = '0%'; setTimeout(() => bar.style.width = '50%', 1000); setTimeout(() => bar.style.width = '100%', 3000);
+            setTimeout(() => { document.getElementById('hardware-popup').innerHTML = `<div class="popup-header"><i class="fas fa-check-circle text-green-600"></i> Installed</div><div>Thiết bị đã tương thích hoàn toàn.</div>`; setTimeout(() => document.getElementById('hardware-popup').style.display = 'none', 5000); }, 3500);
         }
 
-        function resetGachaData() {
-            if(confirm("CẢNH BÁO: Hành động này sẽ xóa sạch kho đồ và reset vật phẩm về mặc định. Chắc chưa?")) {
-                localStorage.removeItem('xp_gacha_items');
-                localStorage.removeItem('xp_gacha_inventory');
-                localStorage.removeItem('xp_gacha_daily');
-                location.reload();
-            }
+        function initMines() {
+            const grid = document.getElementById('mine-grid'); grid.innerHTML = ''; const msg = ['I', 'L', 'O', 'V', 'E', 'U', '❤️', '❤️', '❤️']; let msgIdx = 0;
+            for(let i=0; i<25; i++) { const cell = document.createElement('div'); cell.className = 'mine-cell'; cell.onclick = function() { if(this.classList.contains('revealed')) return; this.classList.add('revealed'); if(msgIdx < msg.length) { this.innerText = msg[msgIdx++]; this.style.color = 'red'; } else { this.innerText = ""; this.style.background = "#ddd"; } }; grid.appendChild(cell); }
         }
 
-        // Init Inventory on Load
-        renderInventory();
+        function toggleNightMode() {
+            const d = document.getElementById('desktop'); const c = document.getElementById('stars-canvas');
+            if(c.style.display === 'block') { c.style.display = 'none'; d.style.backgroundImage = "url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png')"; } 
+            else { d.style.backgroundImage = 'none'; d.style.backgroundColor = '#001'; c.style.display = 'block'; initStars(); }
+        }
+
+        function initStars() {
+            const c = document.getElementById('stars-canvas'); const ctx = c.getContext('2d'); c.width = window.innerWidth; c.height = window.innerHeight;
+            const stars = []; for(let i=0; i<300; i++) stars.push({ x: Math.random()*c.width, y: Math.random()*c.height, r: Math.random()*2+0.5, alpha: Math.random(), d: (Math.random()-0.5)*0.02, speed: Math.random()*0.5+0.1 });
+            let t = 0;
+            function animate() {
+                if(c.style.display === 'none') return; ctx.clearRect(0,0,c.width, c.height); t += 0.01;
+                const g = ctx.createLinearGradient(0,0,c.width,c.height); g.addColorStop(0,'rgba(0,0,20,0)'); g.addColorStop(0.2,'rgba(0,255,127,0.08)'); g.addColorStop(0.5,'rgba(138,43,226,0.08)'); g.addColorStop(1,'rgba(0,0,20,0)');
+                ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(0,c.height);
+                for(let x=0; x<=c.width; x+=20) ctx.lineTo(x, c.height/2 + Math.sin(x*0.005+t)*60 + Math.sin(x*0.01-t*0.5)*40);
+                ctx.lineTo(c.width,c.height); ctx.lineTo(0,c.height); ctx.fill();
+                ctx.fillStyle = "white";
+                stars.forEach(s => { s.alpha += s.d; if(s.alpha<=0.2||s.alpha>=1) s.d=-s.d; s.y-=s.speed; if(s.y<0) s.y=c.height; ctx.globalAlpha=Math.max(0, Math.min(1, s.alpha)); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill(); });
+                ctx.globalAlpha = 1;
+                const cx = c.width/2; const cy = c.height/2; ctx.strokeStyle = "rgba(255,255,0,0.5)"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx-60, cy+30); ctx.lineTo(cx-10, cy+10); ctx.lineTo(cx+30, cy-10); ctx.lineTo(cx+60, cy+20); ctx.stroke();
+                ctx.fillStyle = "#ffffa0"; [{x:cx-60,y:cy+30,r:4},{x:cx-10,y:cy+10,r:3},{x:cx+30,y:cy-10,r:5},{x:cx+60,y:cy+20,r:3}].forEach(p=>{ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();});
+                ctx.font = "bold 14px Tahoma"; ctx.fillStyle = "yellow"; ctx.textAlign = "center"; ctx.fillText("Bạch Dương (09/04) - Của Đồng", cx, cy+60);
+                requestAnimationFrame(animate);
+            } animate();
+        }
+
+        // --- PLAYLIST ---
+        const playlist = [ { title: "1. Demo Chill", src: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3" }, { title: "2. Nhạc Của Đồng", src: "./nhac.mp3" } ];
+        let curTrack = 0; let audio = document.getElementById('audio-player'); let isPlaying = false; let visInterval;
+        document.getElementById('song-title').innerText = playlist[0].title;
+        function playMusic() { if(!audio.src) audio.src = playlist[curTrack].src; audio.play().then(()=>{ isPlaying=true; startVis(); }).catch(e=>console.log(e)); }
+        function pauseMusic() { audio.pause(); isPlaying=false; stopVis(); }
+        function stopMusic() { audio.pause(); audio.currentTime=0; isPlaying=false; stopVis(); }
+        function nextSong() { curTrack=(curTrack+1)%playlist.length; audio.src=playlist[curTrack].src; document.getElementById('song-title').innerText=playlist[curTrack].title; playMusic(); }
+        function prevSong() { curTrack=(curTrack-1+playlist.length)%playlist.length; audio.src=playlist[curTrack].src; document.getElementById('song-title').innerText=playlist[curTrack].title; playMusic(); }
+        audio.onended = nextSong;
+        function startVis() { const c=document.getElementById('visualizer'); c.innerHTML=''; for(let i=0;i<20;i++){const b=document.createElement('div');b.className='bar';b.style.height='10px';b.style.width='10px';c.appendChild(b);} clearInterval(visInterval); visInterval=setInterval(()=>{const bars=document.querySelectorAll('.bar');bars.forEach(b=>{b.style.height=Math.floor(Math.random()*30+5)+'px';});},100); }
+        function stopVis() { clearInterval(visInterval); }
+        function handleAudioError() { console.log("Lỗi nhạc, next."); if(isPlaying) setTimeout(nextSong, 1000); isPlaying=false; }
+
+        // --- CHROME ---
+        function showView(viewId) {
+            document.querySelectorAll('.chrome-view').forEach(el => el.classList.add('hidden-view'));
+            document.getElementById(viewId).classList.remove('hidden-view');
+        }
+
+        function goHome() { 
+            showView('view-search');
+            document.getElementById('chrome-url').innerText = "https://www.google.com";
+            document.getElementById('google-input').value = "";
+            document.getElementById('video-container').innerHTML = `<div class="fake-player" onclick="loadRealVideo()"><img src="https://img.youtube.com/vi/vVhKA9Av6vA/maxresdefault.jpg" alt="Thumbnail"><div class="play-btn-overlay"><div class="play-triangle"></div></div></div>`;
+        }
+        function doGoogleSearch() {
+            const val = document.getElementById('google-input').value.trim(); if(!val) return;
+            if(val.includes('youtube.com/watch?v=') || val.includes('youtu.be/')) { openYouTube(); return; }
+            showView('view-results');
+            document.getElementById('result-bar-text').innerText = val;
+            document.getElementById('chrome-url').innerText = "https://www.google.com/search?q=" + encodeURIComponent(val);
+        }
+        function openYouTube() {
+            showView('view-youtube');
+            document.getElementById('chrome-url').innerText = "https://www.youtube.com";
+        }
+        function loadRealVideo() {
+            document.getElementById('video-container').innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/vVhKA9Av6vA?rel=0&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+        }
+
+        // --- OTHERS ---
+        function startTaskMgr() { const g=document.getElementById('cpu-graph'); g.innerHTML=''; for(let i=0;i<50;i++){const b=document.createElement('div');b.className='cpu-bar';b.style.height='100%';g.appendChild(b);} }
+        function triggerGlitch() { document.body.classList.add('glitching'); document.getElementById('glitch-overlay').style.display='block'; setTimeout(()=>{document.body.classList.remove('glitching');document.getElementById('glitch-overlay').style.display='none';document.getElementById('bsod').style.display='block';},2000); setTimeout(()=>{document.getElementById('bsod').style.display='none';openWindow('secret-window');document.getElementById('desktop').style.backgroundImage="url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png')";},7000); }
+        const msgC = "Chào cậu.\n\nTớ là Đồng.\nNgành Tự động hóa dạy tớ về điều khiển hệ thống, nhưng tớ chịu chết không điều khiển được nhịp tim khi gặp cậu.\n\nTớ có cái này muốn hỏi...";
+        let charIdx = 0;
+        function typeConfession() { if(charIdx < msgC.length) { document.getElementById('typewriter-text').textContent += msgC.charAt(charIdx++); setTimeout(typeConfession, 40); } else { setTimeout(() => { document.getElementById('hidden-content').classList.remove('hidden', 'opacity-0'); }, 500); } }
+        function acceptLove() { closeWindow('secret-window'); document.getElementById('desktop').style.background = 'linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)'; setInterval(() => { const h=document.createElement('div');h.className='heart';h.innerHTML='❤️';h.style.left=Math.random()*100+'vw';h.style.fontSize=(Math.random()*20+10)+'px';h.style.animationDuration=(Math.random()*3+2)+'s';document.getElementById('desktop').appendChild(h);setTimeout(()=>h.remove(),5000); }, 100); alert("Hệ thống ghi nhận: LOVE_GRANTED!"); }
         
+        // --- COMMON ---
+        setInterval(() => { const d = new Date(); document.getElementById('clock').innerText = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); }, 1000);
+        function addCalc(v) { document.getElementById('calc-res').innerText += v; } function clearCalc() { document.getElementById('calc-res').innerText = ''; } function loveResult() { document.getElementById('calc-res').innerText = '09/04/2004'; }
+        
+        // --- EASTER EGG ---
+        const konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"]; let kIdx = 0;
+        document.addEventListener('keydown', (e) => { if(e.key === konami[kIdx]) { kIdx++; if(kIdx === konami.length) { triggerGlitch(); kIdx = 0; } } else { kIdx = 0; } });
+        document.getElementById('bsod').addEventListener('click', function() { this.style.display = 'none'; });
+
     </script>
 </body>
 </html>
