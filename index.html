@@ -267,15 +267,15 @@
             { id: 1, name: "Cái ôm ấm áp", img: "./hug.jpg", rank: "white", rate: 40, desc: "Một cái ôm nhẹ nhàng." },
             { id: 2, name: "Trà sữa", img: "./milktea.jpg", rank: "blue", rate: 30, desc: "Đồng mời!" },
             { id: 3, name: "Vé xem phim", img: "./ticket.jpg", rank: "purple", rate: 15, desc: "Đi xem phim nhé." },
-            { id: 4, name: "Đi chơi xa", img: "./trip.jpg", rank: "gold", rate: 10, desc: "Xách ba lô lên và đi." },
-            { id: 5, name: "Trái tim Đồng", img: "./myheart.jpg", rank: "pink", rate: 5, desc: "Vật phẩm quý giá nhất." }
+            { id: 4, name: "Đi chơi xa", img: "./trip.jpg", rank: "gold", rate: 5, desc: "Xách ba lô lên và đi." },
+            { id: 5, name: "Trái tim Đồng", img: "./myheart.jpg", rank: "pink", rate: 1, desc: "Vật phẩm quý giá nhất." }
         ];
         let gachaItems = JSON.parse(localStorage.getItem('xp_gacha_items')) || defaultGachaItems;
         let inventory = JSON.parse(localStorage.getItem('xp_gacha_inventory')) || [];
         let dailyData = JSON.parse(localStorage.getItem('xp_gacha_daily')) || { date: '', count: 3 };
 
         const today = new Date().toDateString();
-        if (dailyData.date !== today) { dailyData = { date: today, count: 3 }; localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData)); }
+        if (dailyData.date !== today) { dailyData = { date: today, count: 100 }; localStorage.setItem('xp_gacha_daily', JSON.stringify(dailyData)); }
         setTimeout(updateUI, 1000);
 
         let adminClickCount = 0, adminClickTimer;
@@ -454,3 +454,4 @@
     </script>
 </body>
 </html>
+
